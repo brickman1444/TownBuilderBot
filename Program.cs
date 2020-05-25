@@ -39,7 +39,16 @@ namespace TownBuilderBot
             Tweetinvi.Logic.JsonConverters.JsonPropertyConverterRepository.JsonConverters.Remove(typeof(Tweetinvi.Models.Language));
             Tweetinvi.Logic.JsonConverters.JsonPropertyConverterRepository.JsonConverters.Add(typeof(Tweetinvi.Models.Language), new CustomJsonLanguageConverter());
 
-            TweetQuote("Test tweet");
+            Tweet("🌊🌊🌊🌊🏝️🌊🌊🌊🌊🌊\n" +
+                "🌊🌊🌊🌊🌊🌊🌊🌊🌴🌳\n" +
+                "🌊🌴🌴🌴🌊🌊🌴🌴🌳🌳\n" +
+                "🌳🌳🌳🌳🌳🌊🌳🌳🌳🌲\n" +
+                "🌳🌳🌳🌳❓🌊🌊🌳🌲🌲\n" +
+                "🌳🌳🌳🌳🌳🌳🌊🌲⛰⛰\n" +
+                "🌳🌳🌳🌳🌳🌲🌊⛰⛰🏜\n" +
+                "🌳🌲🌳🌳🌲🌲⛰⛰🏜🏜\n" +
+                "🌲⛰🌲🌲🌲⛰🏔⛰🏜🏜\n" +
+                "🌲🌲🌲🌲⛰🏔🏔⛰🏜🏜");
         }
 
         static void InitializeTwitterCredentials()
@@ -63,7 +72,7 @@ namespace TownBuilderBot
             Tweetinvi.Auth.SetUserCredentials(consumerKey, consumerSecret, accessToken, accessTokenSecret);
         }
 
-        static void TweetQuote(string quote)
+        static void Tweet(string quote)
         {
             Console.WriteLine("Publishing tweet: " + quote);
             var tweet = Tweetinvi.Tweet.PublishTweet(quote);

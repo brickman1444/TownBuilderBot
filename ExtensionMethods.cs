@@ -2,7 +2,7 @@ using System;
 using System.Linq;
 using System.Collections.Generic;
 
-namespace CaptainRexEbooks
+namespace TownBuilderBot
 {
     public static class ExtensionMethods
     {

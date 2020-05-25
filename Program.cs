@@ -1,26 +1,17 @@
 ﻿﻿using System;
 using System.IO;
-using System.Collections.Generic;
+
+using Tweetinvi;
 
 namespace TownBuilderBot
 {
     static class Program
     {
-        public static Stream awsLambdaHandler(Stream inputStream)
+        public static System.IO.Stream awsLambdaHandler(System.IO.Stream inputStream)
         {
             Console.WriteLine("starting via lambda");
             Main(new string[0]);
             return inputStream;
-        }
-
-        public class CustomJsonLanguageConverter : Tweetinvi.Logic.JsonConverters.JsonLanguageConverter
-        {
-            public override object ReadJson(Newtonsoft.Json.JsonReader reader, Type objectType, object existingValue, Newtonsoft.Json.JsonSerializer serializer)
-            {
-                return reader.Value != null
-                    ? base.ReadJson(reader, objectType, existingValue, serializer)
-                    : Tweetinvi.Models.Language.English;
-            }
         }
 
         public static void Main(string[] args)
@@ -29,15 +20,18 @@ namespace TownBuilderBot
 
             Console.WriteLine("Beginning program");
 
-            GenerateQuoteAndTweet();
+            TwitterClient client = InitializeTwitterCredentials();
+
+            //var tweet = Tweetinvi.Tweet.GetTweet(1264633640270651393);
+
+            Tweetinvi.Models.ITweet tweet = client.Tweets.GetTweetAsync(1264633640270651393).GetAwaiter().GetResult();
+
+            //GenerateQuoteAndTweet();
         }
 
         static void GenerateQuoteAndTweet()
         {
             InitializeTwitterCredentials();
-
-            Tweetinvi.Logic.JsonConverters.JsonPropertyConverterRepository.JsonConverters.Remove(typeof(Tweetinvi.Models.Language));
-            Tweetinvi.Logic.JsonConverters.JsonPropertyConverterRepository.JsonConverters.Add(typeof(Tweetinvi.Models.Language), new CustomJsonLanguageConverter());
 
             Tweet("🌊🌊🌊🌊🏝️🌊🌊🌊🌊🌊\n" +
                 "🌊🌊🌊🌊🌊🌊🌊🌊🌴🌳\n" +
@@ -51,7 +45,7 @@ namespace TownBuilderBot
                 "🌲🌲🌲🌲⛰🏔🏔⛰🏜🏜");
         }
 
-        static void InitializeTwitterCredentials()
+        static TwitterClient InitializeTwitterCredentials()
         {
             string consumerKey = System.Environment.GetEnvironmentVariable("twitterConsumerKey");
             string consumerSecret = System.Environment.GetEnvironmentVariable("twitterConsumerSecret");
@@ -69,13 +63,13 @@ namespace TownBuilderBot
                 }
             }
 
-            Tweetinvi.Auth.SetUserCredentials(consumerKey, consumerSecret, accessToken, accessTokenSecret);
+            return new TwitterClient(consumerKey, consumerSecret, accessToken, accessTokenSecret);
         }
 
         static void Tweet(string quote)
         {
             Console.WriteLine("Publishing tweet: " + quote);
-            var tweet = Tweetinvi.Tweet.PublishTweet(quote);
+            //var tweet = Tweetinvi.Tweet.PublishTweet(quote);
         }
     }
 }

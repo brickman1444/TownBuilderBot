@@ -1,5 +1,7 @@
 ﻿﻿using System;
 using System.IO;
+using System.Net;
+using System.Text;
 
 using Tweetinvi;
 
@@ -20,6 +22,25 @@ namespace TownBuilderBot
 
             Console.WriteLine("Beginning program");
 
+            CreateCard();
+        }
+
+        static void CreateCard()
+        {
+            Encoding encode = System.Text.Encoding.GetEncoding("utf-8");
+            HttpWebRequest request = (HttpWebRequest)WebRequest.Create("url");
+
+            using (HttpWebResponse response = (HttpWebResponse)request.GetResponseAsync().GetAwaiter().GetResult())
+            {
+                using (StreamReader readStream = new StreamReader(response.GetResponseStream(), encode))
+                {
+                    string responseText = readStream.ReadToEnd();
+                }
+            }
+        }
+
+        static void PullTwitterPoll()
+        {
             TwitterClient client = InitializeTwitterCredentials();
 
             //var tweet = Tweetinvi.Tweet.GetTweet(1264633640270651393);
@@ -37,8 +58,6 @@ namespace TownBuilderBot
             Console.WriteLine(result.Content);
 
             // {"data":{"attachments":{"poll_ids":["1264633639914045440"]},"id":"1264633640270651393","text":"\uD83C\uDF0A\uD83C\uDF0A\uD83C\uDF0A\uD83C\uDF0A\uD83C\uDFDD️\uD83C\uDF0A\uD83C\uDF0A\uD83C\uDF0A\uD83C\uDF0A\uD83C\uDF0A\n\uD83C\uDF0A\uD83C\uDF0A\uD83C\uDF0A\uD83C\uDF0A\uD83C\uDF0A\uD83C\uDF0A\uD83C\uDF0A\uD83C\uDF0A\uD83C\uDF34\uD83C\uDF33\n\uD83C\uDF0A\uD83C\uDF34\uD83C\uDF34\uD83C\uDF34\uD83C\uDF0A\uD83C\uDF0A\uD83C\uDF34\uD83C\uDF34\uD83C\uDF33\uD83C\uDF33\n\uD83C\uDF33\uD83C\uDF33\uD83C\uDF33\uD83C\uDF33\uD83C\uDF33\uD83C\uDF0A\uD83C\uDF33\uD83C\uDF33\uD83C\uDF33\uD83C\uDF32\n\uD83C\uDF33\uD83C\uDF33\uD83C\uDF33\uD83C\uDF33❓\uD83C\uDF0A\uD83C\uDF0A\uD83C\uDF33\uD83C\uDF32\uD83C\uDF32\n\uD83C\uDF33\uD83C\uDF33\uD83C\uDF33\uD83C\uDF33\uD83C\uDF33\uD83C\uDF33\uD83C\uDF0A\uD83C\uDF32⛰⛰\n\uD83C\uDF33\uD83C\uDF33\uD83C\uDF33\uD83C\uDF33\uD83C\uDF33\uD83C\uDF32\uD83C\uDF0A⛰⛰\uD83C\uDFDC\n\uD83C\uDF33\uD83C\uDF32\uD83C\uDF33\uD83C\uDF33\uD83C\uDF32\uD83C\uDF32⛰⛰\uD83C\uDFDC\uD83C\uDFDC\n\uD83C\uDF32⛰\uD83C\uDF32\uD83C\uDF32\uD83C\uDF32⛰\uD83C\uDFD4⛰\uD83C\uDFDC\uD83C\uDFDC\n\uD83C\uDF32\uD83C\uDF32\uD83C\uDF32\uD83C\uDF32⛰\uD83C\uDFD4\uD83C\uDFD4⛰\uD83C\uDFDC\uD83C\uDFDC"},"includes":{"polls":[{"id":"1264633639914045440","options":[{"position":1,"label":"House \uD83C\uDFE0","votes":0},{"position":2,"label":"Post Office \uD83C\uDFE4","votes":0},{"position":3,"label":"Castle \uD83C\uDFF0","votes":1}]}]}}
-
-            //GenerateQuoteAndTweet();
         }
 
         static void GenerateQuoteAndTweet()

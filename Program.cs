@@ -1,4 +1,5 @@
 ﻿﻿using System;
+using Mastonet;
 
 namespace TownBuilderBot
 {
@@ -16,10 +17,11 @@ namespace TownBuilderBot
             Console.OutputEncoding = System.Text.Encoding.UTF8;
 
             Console.WriteLine("Beginning program");
-        }
 
-        static void GenerateQuoteAndTweet()
-        {
+            // string instance = Environment.GetEnvironmentVariable("mastodonInstance");
+            // string accessToken = Environment.GetEnvironmentVariable("mastodonAccessToken");
+            // MastodonClient client = new MastodonClient(instance, accessToken);
+
             var status = "🌊🌊🌊🌊🏝️🌊🌊🌊🌊🌊\n" +
                 "🌊🌊🌊🌊🌊🌊🌊🌊🌴🌳\n" +
                 "🌊🌴🌴🌴🌊🌊🌴🌴🌳🌳\n" +
@@ -30,6 +32,22 @@ namespace TownBuilderBot
                 "🌳🌲🌳🌳🌲🌲⛰⛰🏜🏜\n" +
                 "🌲⛰🌲🌲🌲⛰🏔⛰🏜🏜\n" +
                 "🌲🌲🌲🌲⛰🏔🏔⛰🏜🏜";
+
+            var stringInfo = new System.Globalization.StringInfo(status);
+
+            for (int element = 0; element < stringInfo.LengthInTextElements; element++) {
+                Console.WriteLine(String.Format(
+                "Text element {0} is '{1}'",
+                element, stringInfo.SubstringByTextElements(element, 1)));
+            }
+
+            Mastonet.Entities.PollParameters poll = new Mastonet.Entities.PollParameters()
+            {
+                Options = new string[] { "🏠", "🏤", "🏰" },
+                ExpiresIn = System.TimeSpan.FromDays(1),
+            };
+
+            //client.PublishStatus(status, poll: poll);
         }
     }
 }

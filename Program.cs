@@ -1,4 +1,5 @@
 ﻿﻿using System;
+using System.Collections.Generic;
 using Mastonet;
 using dotenv.net;
 
@@ -47,13 +48,31 @@ namespace TownBuilderBot
 
             string newGrid = ReplaceElement(startingGrid, GridWidth, randomX, randomY, questionMark);
 
+            List<string> pollOptions = RandomFirstN(4, EmojiIndex.All, rand);
+
             Mastonet.Entities.PollParameters poll = new Mastonet.Entities.PollParameters()
             {
-                Options = new string[] { "🏠", "🏤", "🏰" },
+                Options = pollOptions.ToArray(),
                 ExpiresIn = System.TimeSpan.FromHours(1),
             };
 
             var _ = client.PublishStatus(newGrid, poll: poll).Result;
+        }
+
+        public static List<string> RandomFirstN(int n, string[] inArray, Random rand)
+        {
+            List<string> list = new List<string>(inArray);
+
+            List<string> output = new List<string>();
+
+            for (int i = 0; i < n; i++)
+            {
+                int randomIndex = rand.Next(list.Count);
+                output.Add(list[randomIndex]);
+                list.RemoveAt(randomIndex);
+            }
+
+            return output;
         }
 
         public static string ReplaceElement(string inGrid, int width, int x, int y, string newString)

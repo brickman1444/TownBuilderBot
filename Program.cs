@@ -1,5 +1,6 @@
 ﻿﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Mastonet;
 using dotenv.net;
 
@@ -27,6 +28,15 @@ namespace TownBuilderBot
             string instance = Environment.GetEnvironmentVariable("mastodonInstance");
             string accessToken = Environment.GetEnvironmentVariable("mastodonAccessToken");
             MastodonClient client = new MastodonClient(instance, accessToken);
+
+            Mastonet.Entities.Account account = client.GetCurrentUser().Result;
+
+            var statuses = client.GetAccountStatuses(account.Id, new ArrayOptions(){ Limit = 1 }).Result;
+
+            Mastonet.Entities.Status latestStatus = statuses.First();
+
+            // TODO
+            if (latestStatus.Poll
 
             var startingGrid = "🌊🌊🌊🌊🏝️🌊🌊🌊🌊🌊\n" +
                 "🌊🌊🌊🌊🌊🌊🌊🌊🌴🌳\n" +

@@ -1,10 +1,13 @@
 ﻿﻿using System;
 using Mastonet;
+using dotenv.net;
 
 namespace TownBuilderBot
 {
     static class Program
     {
+        const int GridWidth = 10;
+
         public static System.IO.Stream awsLambdaHandler(System.IO.Stream inputStream)
         {
             Console.WriteLine("starting via lambda");
@@ -18,36 +21,52 @@ namespace TownBuilderBot
 
             Console.WriteLine("Beginning program");
 
-            // string instance = Environment.GetEnvironmentVariable("mastodonInstance");
-            // string accessToken = Environment.GetEnvironmentVariable("mastodonAccessToken");
-            // MastodonClient client = new MastodonClient(instance, accessToken);
+            DotEnv.Load();
 
-            var status = "🌊🌊🌊🌊🏝️🌊🌊🌊🌊🌊\n" +
+            string instance = Environment.GetEnvironmentVariable("mastodonInstance");
+            string accessToken = Environment.GetEnvironmentVariable("mastodonAccessToken");
+            MastodonClient client = new MastodonClient(instance, accessToken);
+
+            var startingGrid = "🌊🌊🌊🌊🏝️🌊🌊🌊🌊🌊\n" +
                 "🌊🌊🌊🌊🌊🌊🌊🌊🌴🌳\n" +
                 "🌊🌴🌴🌴🌊🌊🌴🌴🌳🌳\n" +
                 "🌳🌳🌳🌳🌳🌊🌳🌳🌳🌲\n" +
-                "🌳🌳🌳🌳❓🌊🌊🌳🌲🌲\n" +
+                "🌳🌳🌳🌳🌳🌊🌊🌳🌲🌲\n" +
                 "🌳🌳🌳🌳🌳🌳🌊🌲⛰⛰\n" +
                 "🌳🌳🌳🌳🌳🌲🌊⛰⛰🏜\n" +
                 "🌳🌲🌳🌳🌲🌲⛰⛰🏜🏜\n" +
                 "🌲⛰🌲🌲🌲⛰🏔⛰🏜🏜\n" +
                 "🌲🌲🌲🌲⛰🏔🏔⛰🏜🏜";
 
-            var stringInfo = new System.Globalization.StringInfo(status);
+            string questionMark = "❓";
 
-            for (int element = 0; element < stringInfo.LengthInTextElements; element++) {
-                Console.WriteLine(String.Format(
-                "Text element {0} is '{1}'",
-                element, stringInfo.SubstringByTextElements(element, 1)));
-            }
+            Random rand = new Random();
+
+            int randomX = rand.Next(GridWidth);
+            int randomY = rand.Next(GridWidth);
+
+            string newGrid = ReplaceElement(startingGrid, GridWidth, randomX, randomY, questionMark);
 
             Mastonet.Entities.PollParameters poll = new Mastonet.Entities.PollParameters()
             {
                 Options = new string[] { "🏠", "🏤", "🏰" },
-                ExpiresIn = System.TimeSpan.FromDays(1),
+                ExpiresIn = System.TimeSpan.FromHours(1),
             };
 
-            //client.PublishStatus(status, poll: poll);
+            var _ = client.PublishStatus(newGrid, poll: poll).Result;
+        }
+
+        public static string ReplaceElement(string inGrid, int width, int x, int y, string newString)
+        {
+            int index = y * (width + 1) + x;
+
+            System.Globalization.StringInfo stringInfo = new System.Globalization.StringInfo(inGrid);
+
+            string prefix = stringInfo.SubstringByTextElements(0, index);
+
+            string suffix = stringInfo.SubstringByTextElements(index + 1);
+
+            return prefix + newString + suffix;
         }
     }
 }

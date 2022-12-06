@@ -31,32 +31,25 @@ namespace TownBuilderBot
 
             Mastonet.Entities.Account account = client.GetCurrentUser().Result;
 
-            var statuses = client.GetAccountStatuses(account.Id, new ArrayOptions(){ Limit = 1 }).Result;
+            string accountId = Environment.GetEnvironmentVariable("mastodonAccountId");
+            var statuses = client.GetAccountStatuses(accountId, new ArrayOptions(){ Limit = 1 }).Result;
 
             Mastonet.Entities.Status latestStatus = statuses.First();
 
-            // TODO
-            if (latestStatus.Poll
+            string latestStatusAsCharacters = ReplaceHTMLWithCharacters(latestStatus.Content);
 
-            var startingGrid = "🌊🌊🌊🌊🏝️🌊🌊🌊🌊🌊\n" +
-                "🌊🌊🌊🌊🌊🌊🌊🌊🌴🌳\n" +
-                "🌊🌴🌴🌴🌊🌊🌴🌴🌳🌳\n" +
-                "🌳🌳🌳🌳🌳🌊🌳🌳🌳🌲\n" +
-                "🌳🌳🌳🌳🌳🌊🌊🌳🌲🌲\n" +
-                "🌳🌳🌳🌳🌳🌳🌊🌲⛰⛰\n" +
-                "🌳🌳🌳🌳🌳🌲🌊⛰⛰🏜\n" +
-                "🌳🌲🌳🌳🌲🌲⛰⛰🏜🏜\n" +
-                "🌲⛰🌲🌲🌲⛰🏔⛰🏜🏜\n" +
-                "🌲🌲🌲🌲⛰🏔🏔⛰🏜🏜";
+            string pollWinner = GetWinningOption(latestStatus.Poll);
 
             string questionMark = "❓";
+
+            string newGridWithoutQuestionMark = latestStatusAsCharacters.Replace(questionMark, pollWinner);
 
             Random rand = new Random();
 
             int randomX = rand.Next(GridWidth);
             int randomY = rand.Next(GridWidth);
 
-            string newGrid = ReplaceElement(startingGrid, GridWidth, randomX, randomY, questionMark);
+            string newGrid = ReplaceElement(newGridWithoutQuestionMark, GridWidth, randomX, randomY, questionMark);
 
             List<string> pollOptions = RandomFirstN(4, EmojiIndex.All, rand);
 
@@ -67,6 +60,24 @@ namespace TownBuilderBot
             };
 
             var _ = client.PublishStatus(newGrid, poll: poll).Result;
+        }
+
+        private static string ReplaceHTMLWithCharacters(string input)
+        {
+            return input.Replace("<p>", "").Replace("<br />", "\n").Replace("</p>", "");
+        } 
+
+        private static string GetWinningOption(Mastonet.Entities.Poll poll)
+        {
+            if (poll == null)
+            {
+                Console.WriteLine("Couldn't find poll. Default option.");
+                return "🌳";
+            }
+
+            Mastonet.Entities.PollOption winningOption = poll.Options.OrderByDescending(o => o.VotesCount).First();
+
+            return winningOption.Title;
         }
 
         public static List<string> RandomFirstN(int n, string[] inArray, Random rand)

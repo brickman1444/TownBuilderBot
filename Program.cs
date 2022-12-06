@@ -56,7 +56,7 @@ namespace TownBuilderBot
             Mastonet.Entities.PollParameters poll = new Mastonet.Entities.PollParameters()
             {
                 Options = pollOptions.ToArray(),
-                ExpiresIn = System.TimeSpan.FromHours(1),
+                ExpiresIn = System.TimeSpan.FromDays(1),
             };
 
             var _ = client.PublishStatus(newGrid, poll: poll).Result;

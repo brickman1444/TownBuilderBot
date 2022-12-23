@@ -67,7 +67,7 @@ namespace TownBuilderBot
             return input.Replace("<p>", "").Replace("<br />", "\n").Replace("</p>", "");
         } 
 
-        private static string GetWinningOption(Mastonet.Entities.Poll poll)
+        public static string GetWinningOption(Mastonet.Entities.Poll poll)
         {
             if (poll == null)
             {

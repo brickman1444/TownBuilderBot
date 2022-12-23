@@ -41,5 +41,29 @@ namespace TownBuilderBot
 
             Assert.Equal(result, expectedResult);
         }
+
+        [Fact]
+        public static void WinningOption_PicksObviousWinner()
+        {
+            Mastonet.Entities.Poll poll = new Mastonet.Entities.Poll() {
+                Options = new Mastonet.Entities.PollOption[] {
+                    new Mastonet.Entities.PollOption() {
+                        Title = "A",
+                        VotesCount = 10,
+                    },
+                    new Mastonet.Entities.PollOption() {
+                        Title = "B",
+                        VotesCount = 1,
+                    },
+                    new Mastonet.Entities.PollOption() {
+                        Title = "C",
+                        VotesCount = 1,
+                    },
+                }
+            };
+
+            string winner = Program.GetWinningOption(poll);
+            Assert.Equal(winner, "A");
+        }
     }
 }

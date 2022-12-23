@@ -38,13 +38,13 @@ namespace TownBuilderBot
 
             string latestStatusAsCharacters = ReplaceHTMLWithCharacters(latestStatus.Content);
 
-            string pollWinner = GetWinningOption(latestStatus.Poll);
+            Random rand = new Random();
+
+            string pollWinner = GetWinningOption(latestStatus.Poll, rand);
 
             string questionMark = "❓";
 
             string newGridWithoutQuestionMark = latestStatusAsCharacters.Replace(questionMark, pollWinner);
-
-            Random rand = new Random();
 
             int randomX = rand.Next(GridWidth);
             int randomY = rand.Next(GridWidth);
@@ -67,7 +67,7 @@ namespace TownBuilderBot
             return input.Replace("<p>", "").Replace("<br />", "\n").Replace("</p>", "");
         } 
 
-        public static string GetWinningOption(Mastonet.Entities.Poll poll)
+        public static string GetWinningOption(Mastonet.Entities.Poll poll, Random rand)
         {
             if (poll == null)
             {
@@ -75,7 +75,13 @@ namespace TownBuilderBot
                 return "🌳";
             }
 
-            Mastonet.Entities.PollOption winningOption = poll.Options.OrderByDescending(o => o.VotesCount).First();
+            int maxVotes = poll.Options.Max(o => o.VotesCount ?? 0);
+
+            IEnumerable<Mastonet.Entities.PollOption> winningOptions = poll.Options.Where(o => o.VotesCount == maxVotes);
+
+            int randIndex = rand.Next(winningOptions.Count());
+
+            Mastonet.Entities.PollOption winningOption = winningOptions.ElementAt(randIndex);
 
             return winningOption.Title;
         }

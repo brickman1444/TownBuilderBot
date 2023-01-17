@@ -49,11 +49,11 @@ namespace TownBuilderBot
 
             string newGrid = ReplaceElement(newGridWithoutQuestionMark, GridWidth, randomX, randomY, questionMark);
 
-            List<string> pollOptions = RandomFirstN(4, EmojiIndex.All, rand);
+            List<EmojiIndex.EmojiData> pollOptions = RandomFirstN(4, EmojiIndex.All, rand);
 
             Mastonet.Entities.PollParameters poll = new Mastonet.Entities.PollParameters()
             {
-                Options = pollOptions.ToArray(),
+                Options = pollOptions.Select(d => d.Emoji + " " + d.Name),
                 ExpiresIn = System.TimeSpan.FromDays(1),
             };
 
@@ -84,11 +84,11 @@ namespace TownBuilderBot
             return winningOption.Title;
         }
 
-        public static List<string> RandomFirstN(int n, string[] inArray, Random rand)
+        public static List<T> RandomFirstN<T>(int n, T[] inArray, Random rand)
         {
-            List<string> list = new List<string>(inArray);
+            List<T> list = new List<T>(inArray);
 
-            List<string> output = new List<string>();
+            List<T> output = new List<T>();
 
             for (int i = 0; i < n; i++)
             {

@@ -1,2 +1,2 @@
 # TownBuilderBot
-An interactive bot at https://twitter.com/TownBuilderBot that let's users communally decide how to build a town.
+An interactive bot at https://botsin.space/@TownBuilder that let's users communally decide how to build a town.

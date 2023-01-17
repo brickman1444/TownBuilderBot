@@ -40,11 +40,9 @@ namespace TownBuilderBot
 
             Random rand = new Random();
 
-            string pollWinner = GetWinningOption(latestStatus.Poll, rand);
-
             string questionMark = "❓";
 
-            string newGridWithoutQuestionMark = latestStatusAsCharacters.Replace(questionMark, pollWinner);
+            string newGridWithoutQuestionMark = ReplaceTargetWithPollWinner(latestStatus.Poll, questionMark, latestStatusAsCharacters, rand);
 
             int randomX = rand.Next(GridWidth);
             int randomY = rand.Next(GridWidth);
@@ -113,6 +111,17 @@ namespace TownBuilderBot
             string suffix = stringInfo.SubstringByTextElements(index + 1);
 
             return prefix + newString + suffix;
+        }
+
+        public static string ReplaceTargetWithPollWinner(Mastonet.Entities.Poll poll, string targetElement, string grid, Random rand)
+        {
+            string fullPollWinner = GetWinningOption(poll, rand);
+
+            System.Globalization.StringInfo stringInfo = new System.Globalization.StringInfo(fullPollWinner);
+
+            string winnerEmoji = stringInfo.SubstringByTextElements(0, 1);
+
+            return grid.Replace(targetElement, winnerEmoji);
         }
     }
 }

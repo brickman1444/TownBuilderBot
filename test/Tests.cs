@@ -20,7 +20,7 @@ namespace TownBuilderBot
                                   + "IXKL\n"
                                   + "MNOP";
 
-            Assert.Equal(result, expectedResult);
+            Assert.Equal(expectedResult, result);
         }
 
         [Fact]
@@ -38,7 +38,7 @@ namespace TownBuilderBot
                                   + "🏔X🏔🏔\n"
                                   + "🏔🏔🏔🏔";
 
-            Assert.Equal(result, expectedResult);
+            Assert.Equal(expectedResult, result);
         }
 
         [Fact]
@@ -107,6 +107,37 @@ namespace TownBuilderBot
             Assert.InRange(wins["B"], 400, 600);
             Assert.InRange(wins["C"], 400, 600);
             Assert.Equal(0, wins["D"]);
+        }
+
+        [Fact]
+        public static void ReplaceTargetWithPollWinner_WorksWhenPollOptionsAreMoreThanJustAnEmoji()
+        {
+            Mastonet.Entities.Poll poll = new Mastonet.Entities.Poll() {
+                Options = new Mastonet.Entities.PollOption[] {
+                    new Mastonet.Entities.PollOption() {
+                        Title = "🐵 Monkey",
+                        VotesCount = 1,
+                    },
+                }
+            };
+
+            string targetElement = "X";
+
+            string grid = "🏔🏔🏔🏔\n"
+                        + "🏔🏔X🏔\n"
+                        + "🏔🏔🏔🏔\n"
+                        + "🏔🏔🏔🏔";
+
+            System.Random rand = new System.Random();
+
+            string resultGrid = Program.ReplaceTargetWithPollWinner(poll, targetElement, grid, rand);
+
+            string expectedResult = "🏔🏔🏔🏔\n"
+                                  + "🏔🏔🐵🏔\n"
+                                  + "🏔🏔🏔🏔\n"
+                                  + "🏔🏔🏔🏔";
+
+            Assert.Equal(expectedResult, resultGrid);
         }
     }
 }

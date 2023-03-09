@@ -139,5 +139,59 @@ namespace TownBuilderBot
 
             Assert.Equal(expectedResult, resultGrid);
         }
+
+        [Fact]
+        public static void GetGridCoordinates_FindsStartCoordinate()
+        {
+            string targetElement = "X";
+
+            string grid = "X🏔🏔🏔\n"
+                        + "🏔🏔🏔🏔\n"
+                        + "🏔🏔🏔🏔\n"
+                        + "🏔🏔🏔🏔";
+
+            int width = 4;
+
+            Program.Point location = Program.GetGridCoordinates(grid, width, targetElement);
+
+            Assert.Equal(0, location.Y);
+            Assert.Equal(0, location.X);
+        }
+
+        [Fact]
+        public static void GetGridCoordinates_FindsEndCoordinate()
+        {
+            string targetElement = "X";
+
+            string grid = "🏔🏔🏔🏔\n"
+                        + "🏔🏔🏔🏔\n"
+                        + "🏔🏔🏔🏔\n"
+                        + "🏔🏔🏔X";
+
+            int width = 4;
+
+            Program.Point location = Program.GetGridCoordinates(grid, width, targetElement);
+
+            Assert.Equal(3, location.Y);
+            Assert.Equal(3, location.X);
+        }
+
+        [Fact]
+        public static void GetGridCoordinates_FindsMiddleCoordinate()
+        {
+            string targetElement = "X";
+
+            string grid = "🏔🏔🏔🏔\n"
+                        + "🏔🏔X🏔\n"
+                        + "🏔🏔🏔🏔\n"
+                        + "🏔🏔🏔🏔";
+
+            int width = 4;
+
+            Program.Point location = Program.GetGridCoordinates(grid, width, targetElement);
+
+            Assert.Equal(1, location.Y);
+            Assert.Equal(2, location.X);
+        }
     }
 }

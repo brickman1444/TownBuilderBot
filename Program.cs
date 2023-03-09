@@ -8,6 +8,11 @@ namespace TownBuilderBot
 {
     static class Program
     {
+        public class Point {
+            public int X;
+            public int Y;
+        }
+
         const int GridWidth = 10;
 
         public static System.IO.Stream awsLambdaHandler(System.IO.Stream inputStream)
@@ -111,6 +116,25 @@ namespace TownBuilderBot
             string suffix = stringInfo.SubstringByTextElements(index + 1);
 
             return prefix + newString + suffix;
+        }
+
+        public static Point GetGridCoordinates(string inGrid, int width, string target)
+        {
+            var enumerator = System.Globalization.StringInfo.GetTextElementEnumerator(inGrid);
+            
+            for (int textElementIndex = 0; enumerator.MoveNext(); textElementIndex++)
+            {
+                if (enumerator.GetTextElement() == target)
+                {
+                    return new Point
+                    {
+                        X = textElementIndex % (width + 1),
+                        Y = textElementIndex / (width + 1)
+                    };
+                }
+            }
+
+            return null;
         }
 
         public static string ReplaceTargetWithPollWinner(Mastonet.Entities.Poll poll, string targetElement, string grid, Random rand)

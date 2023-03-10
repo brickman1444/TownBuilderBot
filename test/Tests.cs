@@ -193,5 +193,28 @@ namespace TownBuilderBot
             Assert.Equal(1, location.Y);
             Assert.Equal(2, location.X);
         }
+
+        [Fact]
+        public static void GetPossibleTargetLocations_ReturnsCorrectly()
+        {
+            Program.Point pointToExclude = new Program.Point{X = 1, Y = 2};
+
+            int width = 3;
+
+            List<Program.Point> locations = Program.GetPossibleTargetLocations(width, pointToExclude);
+
+            Program.Point[] expectedLocations = new Program.Point[]{
+                new Program.Point{ X = 0, Y = 0 },
+                new Program.Point{ X = 0, Y = 1 },
+                new Program.Point{ X = 0, Y = 2 },
+                new Program.Point{ X = 1, Y = 0 },
+                new Program.Point{ X = 1, Y = 1 },
+                new Program.Point{ X = 2, Y = 0 },
+                new Program.Point{ X = 2, Y = 1 },
+                new Program.Point{ X = 2, Y = 2 },
+            };
+
+            Assert.Equal(expectedLocations, locations);
+        }
     }
 }

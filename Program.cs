@@ -8,9 +8,14 @@ namespace TownBuilderBot
 {
     static class Program
     {
-        public class Point {
+        public class Point : IEquatable<Point>{
             public int X;
             public int Y;
+
+            bool IEquatable<Point>.Equals(Point other)
+            {
+                return X == other.X && Y == other.Y;
+            }
         }
 
         const int GridWidth = 10;
@@ -47,12 +52,15 @@ namespace TownBuilderBot
 
             string questionMark = "❓";
 
+            Point oldQuestionMarkLocation = GetGridCoordinates(latestStatusAsCharacters, GridWidth, questionMark);
+
             string newGridWithoutQuestionMark = ReplaceTargetWithPollWinner(latestStatus.Poll, questionMark, latestStatusAsCharacters, rand);
 
-            int randomX = rand.Next(GridWidth);
-            int randomY = rand.Next(GridWidth);
+            List<Point> possibleLocations = GetPossibleTargetLocations(GridWidth, oldQuestionMarkLocation);
 
-            string newGrid = ReplaceElement(newGridWithoutQuestionMark, GridWidth, randomX, randomY, questionMark);
+            Point newTargetLocation = possibleLocations[rand.Next(possibleLocations.Count)];
+
+            string newGrid = ReplaceElement(newGridWithoutQuestionMark, GridWidth, newTargetLocation.X, newTargetLocation.Y, questionMark);
 
             List<EmojiIndex.EmojiData> pollOptions = RandomFirstN(4, EmojiIndex.All, rand);
 
@@ -135,6 +143,22 @@ namespace TownBuilderBot
             }
 
             return null;
+        }
+
+        public static List<Point> GetPossibleTargetLocations(int width, Point locationToExclude)
+        {
+            List<Point> possibleLocations = new List<Point>();
+            for (int x = 0; x < width; x++)
+            {
+                for (int y = 0; y < width; y++)
+                {
+                    if (!(x == locationToExclude.X && y == locationToExclude.Y))
+                    {
+                        possibleLocations.Add(new Point{ X = x, Y = y});
+                    }
+                }
+            }
+            return possibleLocations;
         }
 
         public static string ReplaceTargetWithPollWinner(Mastonet.Entities.Poll poll, string targetElement, string grid, Random rand)

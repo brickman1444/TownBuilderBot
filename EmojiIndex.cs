@@ -49,7 +49,6 @@ namespace TownBuilderBot
             new EmojiData(Emoji.PlaceGeographic.SnowCappedMountain.ToString(), "Snow-capped Mountain"),
             new EmojiData(Emoji.PlaceGeographic.Volcano.ToString(), "Volcano"),
 
-            new EmojiData(Emoji.PlaceOther.BarberPole.ToString(), "Barbershop"),
             new EmojiData(Emoji.PlaceOther.CircusTent.ToString(), "Circus"),
             new EmojiData(Emoji.PlaceOther.FerrisWheel.ToString(), "Ferris Wheel"),
             new EmojiData(Emoji.PlaceOther.Fountain.ToString(), "Fountain"),

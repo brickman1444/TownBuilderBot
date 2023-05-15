@@ -18,7 +18,7 @@ namespace TownBuilderBot
             }
         }
 
-        const int GridWidth = 10;
+        const string QuestionMark = "❓";
 
         public static System.IO.Stream awsLambdaHandler(System.IO.Stream inputStream)
         {
@@ -35,35 +35,40 @@ namespace TownBuilderBot
 
             DotEnv.Load();
 
-            string instance = Environment.GetEnvironmentVariable("mastodonInstance");
-            string accessToken = Environment.GetEnvironmentVariable("mastodonAccessToken");
-            MastodonClient client = new MastodonClient(instance, accessToken);
+            MastodonClient client = MakeClient();
 
-            Mastonet.Entities.Account account = client.GetCurrentUser().Result;
-
-            string accountId = Environment.GetEnvironmentVariable("mastodonAccountId");
-            var statuses = client.GetAccountStatuses(accountId, new ArrayOptions(){ Limit = 1 }).Result;
-
-            Mastonet.Entities.Status latestStatus = statuses.First();
+            Mastonet.Entities.Status latestStatus = GetLatestStatus(client);
 
             string latestStatusAsCharacters = ReplaceHTMLWithCharacters(latestStatus.Content);
 
             Random rand = new Random();
 
-            string questionMark = "❓";
-
-            Point oldQuestionMarkLocation = GetGridCoordinates(latestStatusAsCharacters, GridWidth, questionMark);
-
-            string newGridWithoutQuestionMark = ReplaceTargetWithPollWinner(latestStatus.Poll, questionMark, latestStatusAsCharacters, rand);
-
-            List<Point> possibleLocations = GetPossibleTargetLocations(GridWidth, oldQuestionMarkLocation);
-
-            Point newTargetLocation = possibleLocations[rand.Next(possibleLocations.Count)];
-
-            string newGrid = ReplaceElement(newGridWithoutQuestionMark, GridWidth, newTargetLocation.X, newTargetLocation.Y, questionMark);
+            string newGrid = UpdateGrid(latestStatusAsCharacters, latestStatus.Poll, 10, rand);
 
             List<EmojiIndex.EmojiData> pollOptions = RandomFirstN(4, EmojiIndex.All, rand);
 
+            PublishPoll(client, newGrid, pollOptions);
+        }
+
+        private static MastodonClient MakeClient()
+        {
+            string instance = Environment.GetEnvironmentVariable("mastodonInstance");
+            string accessToken = Environment.GetEnvironmentVariable("mastodonAccessToken");
+            return new MastodonClient(instance, accessToken);
+        }
+
+        private static Mastonet.Entities.Status GetLatestStatus(MastodonClient client)
+        {
+            Mastonet.Entities.Account account = client.GetCurrentUser().Result;
+
+            string accountId = Environment.GetEnvironmentVariable("mastodonAccountId");
+            var statuses = client.GetAccountStatuses(accountId, new ArrayOptions(){ Limit = 1 }).Result;
+
+            return statuses.First();
+        }
+
+        private static void PublishPoll(MastodonClient client, string newGrid, List<EmojiIndex.EmojiData> pollOptions)
+        {
             Mastonet.Entities.PollParameters poll = new Mastonet.Entities.PollParameters()
             {
                 Options = pollOptions.Select(d => d.Emoji + " " + d.Name),
@@ -71,6 +76,19 @@ namespace TownBuilderBot
             };
 
             var _ = client.PublishStatus(newGrid, poll: poll).Result;
+        }
+
+        private static string UpdateGrid(string oldGrid, Mastonet.Entities.Poll poll, int gridWidth, Random rand)
+        {
+            Point oldQuestionMarkLocation = GetGridCoordinates(oldGrid, gridWidth, QuestionMark);
+
+            string newGridWithoutQuestionMark = ReplaceTargetWithPollWinner(poll, QuestionMark, oldGrid, rand);
+
+            List<Point> possibleLocations = GetPossibleTargetLocations(gridWidth, oldQuestionMarkLocation);
+
+            Point newTargetLocation = possibleLocations[rand.Next(possibleLocations.Count)];
+
+            return ReplaceElement(newGridWithoutQuestionMark, gridWidth, newTargetLocation.X, newTargetLocation.Y, QuestionMark);
         }
 
         private static string ReplaceHTMLWithCharacters(string input)

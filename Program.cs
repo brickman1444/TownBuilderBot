@@ -121,6 +121,10 @@ namespace TownBuilderBot
 
         public static string ReplaceElement(string inGrid, int width, int x, int y, string newString)
         {
+            if (x < 0 || y < 0 || x >= width || y >= width) {
+                return inGrid;
+            }
+
             int index = y * (width + 1) + x;
 
             System.Globalization.StringInfo stringInfo = new System.Globalization.StringInfo(inGrid);

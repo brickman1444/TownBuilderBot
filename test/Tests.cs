@@ -266,5 +266,49 @@ namespace TownBuilderBot
 
             Assert.Equal(fullFire, grid);
         }
+
+        [Fact]
+        public static void TickVolcano_WorksInTopLeftCorner() {
+            System.Random rand = new System.Random();
+            string grid = "🌋🌳🌳\n"
+                        + "🌳🌳🌳\n"
+                        + "🌳🌳🌳";
+            int width = 3;
+            Program.Point volcanoLocation = new Program.Point{ X = 0, Y = 0};
+            grid = EmojiIndex.TickVolcano(grid, width, volcanoLocation, rand);
+
+            string fullFire = "🌋🔥🌳\n"
+                            + "🔥🔥🌳\n"
+                            + "🌳🌳🌳";
+            Assert.NotEqual(fullFire, grid);
+
+            for (int i = 0; i < 1000; i++) {
+                grid = EmojiIndex.TickVolcano(grid, width, volcanoLocation, rand);
+            }
+
+            Assert.Equal(fullFire, grid);
+        }
+
+        [Fact]
+        public static void TickVolcano_WorksInBottomRightCorner() {
+            System.Random rand = new System.Random();
+            string grid = "🌳🌳🌳\n"
+                        + "🌳🌳🌳\n"
+                        + "🌳🌳🌋";
+            int width = 3;
+            Program.Point volcanoLocation = new Program.Point{ X = 2, Y = 2};
+            grid = EmojiIndex.TickVolcano(grid, width, volcanoLocation, rand);
+
+            string fullFire = "🌳🌳🌳\n"
+                            + "🌳🔥🔥\n"
+                            + "🌳🔥🌋";
+            Assert.NotEqual(fullFire, grid);
+
+            for (int i = 0; i < 1000; i++) {
+                grid = EmojiIndex.TickVolcano(grid, width, volcanoLocation, rand);
+            }
+
+            Assert.Equal(fullFire, grid);
+        }
     }
 }

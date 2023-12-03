@@ -91,6 +91,10 @@ namespace TownBuilderBot
             return ReplaceElement(newGridWithoutQuestionMark, gridWidth, newTargetLocation.X, newTargetLocation.Y, QuestionMark);
         }
 
+        public static string TickGridElements(string oldGrid, int gridWidth, Random rand) {
+            return "";
+        }
+
         private static string ReplaceHTMLWithCharacters(string input)
         {
             return input.Replace("<p>", "").Replace("<br />", "\n").Replace("</p>", "");
@@ -123,7 +127,12 @@ namespace TownBuilderBot
 
             string prefix = stringInfo.SubstringByTextElements(0, index);
 
-            string suffix = stringInfo.SubstringByTextElements(index + 1);
+            string suffix;
+            if (stringInfo.LengthInTextElements == index + 1) {
+                suffix = "";
+            } else {
+               suffix = stringInfo.SubstringByTextElements(index + 1);
+            }
 
             return prefix + newString + suffix;
         }

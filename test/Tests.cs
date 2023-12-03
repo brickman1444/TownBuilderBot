@@ -24,6 +24,24 @@ namespace TownBuilderBot
         }
 
         [Fact]
+        public static void ReplaceElement_WorksInBottomRightCorner()
+        {
+            string grid = "ABCD\n"
+                        + "EFGH\n"
+                        + "IJKL\n"
+                        + "MNOP";
+
+            string result = Program.ReplaceElement(grid, 4, 3, 3, "X");
+
+            string expectedResult = "ABCD\n"
+                                  + "EFGH\n"
+                                  + "IJKL\n"
+                                  + "MNOX";
+
+            Assert.Equal(expectedResult, result);
+        }
+
+        [Fact]
         public static void ReplaceElement_WorksWithEmoji()
         {
             string grid = "🏔🏔🏔🏔\n"
@@ -236,10 +254,11 @@ namespace TownBuilderBot
             Program.Point volcanoLocation = new Program.Point{ X = 1, Y = 1};
             grid = EmojiIndex.TickVolcano(grid, width, volcanoLocation, rand);
 
-            string fullFire = "🌳🔥🌳\n"
+            string fullFire = "🔥🔥🔥\n"
                             + "🔥🌋🔥\n"
-                            + "🌳🔥🌳";
+                            + "🔥🔥🔥";
             Assert.NotEqual(fullFire, grid);
+            Assert.Contains("🔥", grid);
 
             for (int i = 0; i < 1000; i++) {
                 grid = EmojiIndex.TickVolcano(grid, width, volcanoLocation, rand);

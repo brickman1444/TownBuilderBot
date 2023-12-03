@@ -79,5 +79,26 @@ namespace TownBuilderBot
         {
             return CollectionUtils.RandomFirstN(4, EmojiIndex.All.Where(e => e.IsRandomPollOption), rand);
         }
+
+        public static string TickVolcano(string oldGrid, int width, Program.Point location, System.Random rand) {
+            int choice = rand.Next(4);
+            Program.Point fireLocation = new Program.Point{ X = location.X, Y = location.Y};
+            switch (choice) {
+                case 0:
+                    fireLocation.X += 1;
+                    break;
+                case 1:
+                    fireLocation.X -= 1;
+                    break;
+                case 2:
+                    fireLocation.Y += 1;
+                    break;
+                default:
+                    fireLocation.Y -= 1;
+                    break;
+            }
+
+            return Program.ReplaceElement(oldGrid, width, fireLocation.X, fireLocation.Y, Emoji.SkyAndWeather.Fire.ToString());
+        }
     }
 }

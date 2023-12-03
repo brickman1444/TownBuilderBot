@@ -225,5 +225,27 @@ namespace TownBuilderBot
                 Assert.DoesNotContain(options, o => o.Name == "Fire");
             }
         }
+
+        [Fact]
+        public static void TickVolcano_AddsFire() {
+            System.Random rand = new System.Random();
+            string grid = "🌳🌳🌳\n"
+                        + "🌳🌋🌳\n"
+                        + "🌳🌳🌳";
+            int width = 3;
+            Program.Point volcanoLocation = new Program.Point{ X = 1, Y = 1};
+            grid = EmojiIndex.TickVolcano(grid, width, volcanoLocation, rand);
+
+            string fullFire = "🌳🔥🌳\n"
+                            + "🔥🌋🔥\n"
+                            + "🌳🔥🌳";
+            Assert.NotEqual(fullFire, grid);
+
+            for (int i = 0; i < 1000; i++) {
+                grid = EmojiIndex.TickVolcano(grid, width, volcanoLocation, rand);
+            }
+
+            Assert.Equal(fullFire, grid);
+        }
     }
 }

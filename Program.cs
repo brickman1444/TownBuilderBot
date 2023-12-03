@@ -45,7 +45,7 @@ namespace TownBuilderBot
 
             string newGrid = UpdateGrid(latestStatusAsCharacters, latestStatus.Poll, 10, rand);
 
-            List<EmojiIndex.EmojiData> pollOptions = RandomFirstN(4, EmojiIndex.All, rand);
+            List<EmojiIndex.EmojiData> pollOptions = EmojiIndex.GetRandomPollOptions(rand);
 
             PublishPoll(client, newGrid, pollOptions);
         }
@@ -113,22 +113,6 @@ namespace TownBuilderBot
             Mastonet.Entities.PollOption winningOption = winningOptions.ElementAt(randIndex);
 
             return winningOption.Title;
-        }
-
-        public static List<T> RandomFirstN<T>(int n, T[] inArray, Random rand)
-        {
-            List<T> list = new List<T>(inArray);
-
-            List<T> output = new List<T>();
-
-            for (int i = 0; i < n; i++)
-            {
-                int randomIndex = rand.Next(list.Count);
-                output.Add(list[randomIndex]);
-                list.RemoveAt(randomIndex);
-            }
-
-            return output;
         }
 
         public static string ReplaceElement(string inGrid, int width, int x, int y, string newString)

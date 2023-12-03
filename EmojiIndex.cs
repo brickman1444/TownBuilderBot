@@ -1,3 +1,6 @@
+using System.Collections.Generic;
+using System.Linq;
+
 using Emoji = Centvrio.Emoji;
 
 namespace TownBuilderBot
@@ -8,11 +11,13 @@ namespace TownBuilderBot
         {
             public readonly string Emoji;
             public readonly string Name;
+            public bool IsRandomPollOption = true;
 
-            public EmojiData(string InEmoji, string InName)
+            public EmojiData(string InEmoji, string InName, bool InIsRandomPollOption = true)
             {
                 Emoji = InEmoji;
                 Name = InName;
+                IsRandomPollOption = InIsRandomPollOption;
             }
         }
 
@@ -66,6 +71,13 @@ namespace TownBuilderBot
             new EmojiData(Emoji.PlantOther.DeciduousTree.ToString(), "Deciduous Tree"),
             new EmojiData(Emoji.PlantOther.EvergreenTree.ToString(), "Evergreen Tree"),
             new EmojiData(Emoji.PlantOther.PalmTree.ToString(), "Palm Tree"),
+
+            new EmojiData(Emoji.SkyAndWeather.Fire.ToString(), "Fire", false),
         };
+
+        public static List<EmojiData> GetRandomPollOptions(System.Random rand)
+        {
+            return CollectionUtils.RandomFirstN(4, EmojiIndex.All.Where(e => e.IsRandomPollOption), rand);
+        }
     }
 }

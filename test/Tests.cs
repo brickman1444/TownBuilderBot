@@ -216,5 +216,14 @@ namespace TownBuilderBot
 
             Assert.Equal(expectedLocations, locations);
         }
+
+        [Fact]
+        public static void GetRandomPollOptions_DoesntReturnFire() {
+            System.Random rand = new System.Random();
+            for (int i = 0; i < 1000; i++) {
+                List<EmojiIndex.EmojiData> options = EmojiIndex.GetRandomPollOptions(rand);
+                Assert.DoesNotContain(options, o => o.Name == "Fire");
+            }
+        }
     }
 }

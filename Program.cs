@@ -80,6 +80,8 @@ namespace TownBuilderBot
 
         private static string UpdateGrid(string oldGrid, Mastonet.Entities.Poll poll, int gridWidth, Random rand)
         {
+            string tickedGrid = TickGridElements(oldGrid, gridWidth, rand);
+
             Point oldQuestionMarkLocation = GetGridCoordinates(oldGrid, gridWidth, QuestionMark);
 
             string newGridWithoutQuestionMark = ReplaceTargetWithPollWinner(poll, QuestionMark, oldGrid, rand);

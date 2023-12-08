@@ -91,8 +91,21 @@ namespace TownBuilderBot
             return ReplaceElement(newGridWithoutQuestionMark, gridWidth, newTargetLocation.X, newTargetLocation.Y, QuestionMark);
         }
 
-        public static string TickGridElements(string oldGrid, int gridWidth, Random rand) {
-            return "";
+        public static string TickGridElements(string grid, int gridWidth, Random rand) {
+            for (int x = 0; x < gridWidth; x++) {
+                for (int y = 0; y < gridWidth; y++) {
+                    int index = y * (gridWidth + 1) + x;
+                    System.Globalization.StringInfo stringInfo = new System.Globalization.StringInfo(grid);
+                    string element = stringInfo.SubstringByTextElements(index, 1);
+
+                    EmojiIndex.EmojiData elementData = EmojiIndex.All.Where(x => x.Emoji == element).First();
+                    if (elementData.TickFunction != null) {
+                        grid = elementData.TickFunction(grid, gridWidth, new Point(){X = x, Y = y}, rand);
+                    }
+                }
+            }
+
+            return grid;
         }
 
         private static string ReplaceHTMLWithCharacters(string input)

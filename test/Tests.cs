@@ -310,5 +310,27 @@ namespace TownBuilderBot
 
             Assert.Equal(fullFire, grid);
         }
+
+        [Fact]
+        public static void TickGrid_UpdatesVolcano() {
+            System.Random rand = new System.Random();
+            string grid = "🌳🌳🌳\n"
+                        + "🌳🌋🌳\n"
+                        + "🌳🌳🌳";
+            int width = 3;
+            grid = Program.TickGridElements(grid, width, rand);
+
+            string fullFire = "🔥🔥🔥\n"
+                            + "🔥🌋🔥\n"
+                            + "🔥🔥🔥";
+            Assert.NotEqual(fullFire, grid);
+            Assert.Contains("🔥", grid);
+
+            for (int i = 0; i < 1000; i++) {
+                grid = Program.TickGridElements(grid, width, rand);
+            }
+
+            Assert.Equal(fullFire, grid);
+        }
     }
 }

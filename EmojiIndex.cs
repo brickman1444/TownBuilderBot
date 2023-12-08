@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -5,6 +6,7 @@ using Emoji = Centvrio.Emoji;
 
 namespace TownBuilderBot
 {
+    using TickFunctionType = Func<string, int, Program.Point, System.Random, string>;
     static class EmojiIndex
     {
         public class EmojiData
@@ -13,11 +15,14 @@ namespace TownBuilderBot
             public readonly string Name;
             public bool IsRandomPollOption = true;
 
-            public EmojiData(string InEmoji, string InName, bool InIsRandomPollOption = true)
+            public TickFunctionType TickFunction;
+
+            public EmojiData(string InEmoji, string InName, bool InIsRandomPollOption = true, TickFunctionType InTickFunction = null)
             {
                 Emoji = InEmoji;
                 Name = InName;
                 IsRandomPollOption = InIsRandomPollOption;
+                TickFunction = InTickFunction;
             }
         }
 
@@ -52,7 +57,7 @@ namespace TownBuilderBot
             new EmojiData(Emoji.PlaceGeographic.Mountain.ToString(), "Mountain"),
             new EmojiData(Emoji.PlaceGeographic.NationalPark.ToString(), "National Park"),
             new EmojiData(Emoji.PlaceGeographic.SnowCappedMountain.ToString(), "Snow-capped Mountain"),
-            new EmojiData(Emoji.PlaceGeographic.Volcano.ToString(), "Volcano"),
+            new EmojiData(Emoji.PlaceGeographic.Volcano.ToString(), "Volcano", true, EmojiIndex.TickVolcano),
 
             new EmojiData(Emoji.PlaceOther.CircusTent.ToString(), "Circus"),
             new EmojiData(Emoji.PlaceOther.FerrisWheel.ToString(), "Ferris Wheel"),

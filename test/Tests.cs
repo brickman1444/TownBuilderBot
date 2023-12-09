@@ -332,5 +332,18 @@ namespace TownBuilderBot
 
             Assert.Equal(fullFire, grid);
         }
+
+        [Fact]
+        public static void GetZoneGrid_Works() {
+            string elementsGrid = "🌳🏠\n"
+                                + "🎢🏬";
+            int width = 2;
+            string zoneGrid = Program.GetZoneGrid(elementsGrid, width);
+
+            string expectedZoneGrid = "💚🟦\n"
+                                    + "🔶🟡";
+
+            Assert.Equal(expectedZoneGrid, zoneGrid);
+        }
     }
 }

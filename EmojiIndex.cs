@@ -87,6 +87,8 @@ namespace TownBuilderBot
             new EmojiData(Emoji.PlantOther.PalmTree.ToString(), "Palm Tree", Zone.Natural),
 
             new EmojiData(Emoji.SkyAndWeather.Fire.ToString(), "Fire", Zone.None),
+
+            new EmojiData(Emoji.OtherSymbols.Question.ToString(), "Question Mark", Zone.None),
         };
 
         public static List<EmojiData> GetRandomPollOptions(System.Random rand)

@@ -128,7 +128,7 @@ namespace TownBuilderBot
         }
 
         [Fact]
-        public static void ReplaceTargetWithPollWinner_WorksWhenPollOptionsAreMoreThanJustAnEmoji()
+        public static void GetPollWinningElement_WorksWhenPollOptionsAreMoreThanJustAnEmoji()
         {
             Mastonet.Entities.Poll poll = new Mastonet.Entities.Poll() {
                 Options = new Mastonet.Entities.PollOption[] {
@@ -139,23 +139,11 @@ namespace TownBuilderBot
                 }
             };
 
-            string targetElement = "X";
-
-            string grid = "🏔🏔🏔🏔\n"
-                        + "🏔🏔X🏔\n"
-                        + "🏔🏔🏔🏔\n"
-                        + "🏔🏔🏔🏔";
-
             System.Random rand = new System.Random();
 
-            string resultGrid = Program.ReplaceTargetWithPollWinner(poll, targetElement, grid, rand);
+            string resultGrid = Program.GetPollWinningElement(poll, rand);
 
-            string expectedResult = "🏔🏔🏔🏔\n"
-                                  + "🏔🏔🐵🏔\n"
-                                  + "🏔🏔🏔🏔\n"
-                                  + "🏔🏔🏔🏔";
-
-            Assert.Equal(expectedResult, resultGrid);
+            Assert.Equal("🐵", resultGrid);
         }
 
         [Fact]

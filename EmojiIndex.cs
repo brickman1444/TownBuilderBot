@@ -78,6 +78,8 @@ namespace TownBuilderBot
             new EmojiData(Emoji.PlantOther.PalmTree.ToString(), "Palm Tree"),
 
             new EmojiData(Emoji.SkyAndWeather.Fire.ToString(), "Fire", false),
+
+            new EmojiData(Emoji.OtherSymbols.Question.ToString(), "Question Mark", false),
         };
 
         public static List<EmojiData> GetRandomPollOptions(System.Random rand)
@@ -124,6 +126,10 @@ namespace TownBuilderBot
             }
 
             return Program.ReplaceElement(oldGrid, width, fireLocation.X, fireLocation.Y, Emoji.SkyAndWeather.Fire.ToString());
+        }
+
+        public static EmojiData GetData(string emoji) {
+            return All.Where(x => x.Emoji == emoji).First();
         }
     }
 }

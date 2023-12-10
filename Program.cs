@@ -33,6 +33,8 @@ namespace TownBuilderBot
 
             Console.WriteLine("Beginning program");
 
+            bool shouldPublishPost = args.Length == 0 || args[0] != "readonly";
+
             DotEnv.Load();
 
             MastodonClient client = MakeClient();
@@ -47,7 +49,9 @@ namespace TownBuilderBot
 
             List<EmojiIndex.EmojiData> pollOptions = EmojiIndex.GetRandomPollOptions(rand);
 
-            PublishPoll(client, newGrid, pollOptions);
+            if (shouldPublishPost) {
+                PublishPoll(client, newGrid, pollOptions);
+            }
         }
 
         private static MastodonClient MakeClient()
@@ -80,11 +84,12 @@ namespace TownBuilderBot
 
         private static string UpdateGrid(string oldGrid, Mastonet.Entities.Poll poll, int gridWidth, Random rand)
         {
+            Point oldQuestionMarkLocation = GetGridCoordinates(oldGrid, gridWidth, QuestionMark);
+            string winningEmoji = GetPollWinningElement(poll, rand);
+
             string tickedGrid = TickGridElements(oldGrid, gridWidth, rand);
 
-            Point oldQuestionMarkLocation = GetGridCoordinates(oldGrid, gridWidth, QuestionMark);
-
-            string newGridWithoutQuestionMark = ReplaceTargetWithPollWinner(poll, QuestionMark, oldGrid, rand);
+            string newGridWithoutQuestionMark = ReplaceElement(tickedGrid, gridWidth, oldQuestionMarkLocation.X, oldQuestionMarkLocation.Y, winningEmoji);
 
             List<Point> possibleLocations = GetPossibleTargetLocations(gridWidth, oldQuestionMarkLocation);
 
@@ -100,7 +105,7 @@ namespace TownBuilderBot
                     System.Globalization.StringInfo stringInfo = new System.Globalization.StringInfo(grid);
                     string element = stringInfo.SubstringByTextElements(index, 1);
 
-                    EmojiIndex.EmojiData elementData = EmojiIndex.All.Where(x => x.Emoji == element).First();
+                    EmojiIndex.EmojiData elementData = EmojiIndex.GetData(element);
                     if (elementData.TickFunction != null) {
                         grid = elementData.TickFunction(grid, gridWidth, new Point(){X = x, Y = y}, rand);
                     }
@@ -189,6 +194,14 @@ namespace TownBuilderBot
                 }
             }
             return possibleLocations;
+        }
+
+        public static string GetPollWinningElement(Mastonet.Entities.Poll poll, Random rand) {
+            string fullPollWinner = GetWinningOption(poll, rand);
+
+            System.Globalization.StringInfo stringInfo = new System.Globalization.StringInfo(fullPollWinner);
+
+            return stringInfo.SubstringByTextElements(0, 1);
         }
 
         public static string ReplaceTargetWithPollWinner(Mastonet.Entities.Poll poll, string targetElement, string grid, Random rand)

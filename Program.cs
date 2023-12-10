@@ -18,6 +18,12 @@ namespace TownBuilderBot
             }
         }
 
+        public class Post
+        {
+            public string body;
+            public IEnumerable<string> pollOptions;
+        }
+
         const string QuestionMark = "❓";
 
         public static System.IO.Stream awsLambdaHandler(System.IO.Stream inputStream)
@@ -41,20 +47,12 @@ namespace TownBuilderBot
 
             MastodonClient client = MakeClient();
 
-            Mastonet.Entities.Status latestStatus = GetLatestStatus(client);
-
-            string latestStatusAsCharacters = ReplaceHTMLWithCharacters(latestStatus.Content);
-
-            Random rand = new Random();
-
-            string newGrid = UpdateGrid(latestStatusAsCharacters, latestStatus.Poll, 10, rand);
-
-            IEnumerable<string> pollOptions = EmojiIndex.GetRandomPollOptions(rand);
+            Post post = MakeNormalPost(client, 10);
 
             if (isReadOnly) {
-                PrintPost(newGrid, pollOptions);
+                PrintPost(post);
             } else {
-                PublishPoll(client, newGrid, pollOptions);
+                PublishPoll(client, post);
             }
         }
 
@@ -75,25 +73,40 @@ namespace TownBuilderBot
             return statuses.First();
         }
 
-        private static void PublishPoll(MastodonClient client, string newGrid, IEnumerable<string> pollOptions)
+        private static void PublishPoll(MastodonClient client, Post post)
         {
             Console.WriteLine("Publishing Post");
             Mastonet.Entities.PollParameters poll = new Mastonet.Entities.PollParameters()
             {
-                Options = pollOptions,
+                Options = post.pollOptions,
                 ExpiresIn = System.TimeSpan.FromDays(1),
             };
 
-            var _ = client.PublishStatus(newGrid, poll: poll).Result;
+            var _ = client.PublishStatus(post.body, poll: poll).Result;
         }
 
-        private static void PrintPost(string body, IEnumerable<string> pollOptions)
+        private static void PrintPost(Post post)
         {
-            Console.WriteLine(body);
-            foreach (string option in pollOptions)
+            Console.WriteLine(post.body);
+            foreach (string option in post.pollOptions)
             {
                 Console.WriteLine(option);
             }
+        }
+
+        private static Post MakeNormalPost(MastodonClient client, int gridWidth)
+        {
+            Mastonet.Entities.Status latestStatus = GetLatestStatus(client);
+
+            string latestStatusAsCharacters = ReplaceHTMLWithCharacters(latestStatus.Content);
+
+            Random rand = new Random();
+
+            string newGrid = UpdateGrid(latestStatusAsCharacters, latestStatus.Poll, gridWidth, rand);
+
+            IEnumerable<string> pollOptions = EmojiIndex.GetRandomPollOptions(rand);
+
+            return new Post(){ body = newGrid, pollOptions = pollOptions };
         }
 
         private static string UpdateGrid(string oldGrid, Mastonet.Entities.Poll poll, int gridWidth, Random rand)

@@ -51,6 +51,8 @@ namespace TownBuilderBot
 
             if (shouldPublishPost) {
                 PublishPoll(client, newGrid, pollOptions);
+            } else {
+                Console.WriteLine(newGrid);
             }
         }
 
@@ -73,6 +75,7 @@ namespace TownBuilderBot
 
         private static void PublishPoll(MastodonClient client, string newGrid, List<EmojiIndex.EmojiData> pollOptions)
         {
+            Console.WriteLine("Publishing Post");
             Mastonet.Entities.PollParameters poll = new Mastonet.Entities.PollParameters()
             {
                 Options = pollOptions.Select(d => d.Emoji + " " + d.Name),
@@ -119,25 +122,6 @@ namespace TownBuilderBot
         {
             return input.Replace("<p>", "").Replace("<br />", "\n").Replace("</p>", "");
         } 
-
-        public static string GetWinningOption(Mastonet.Entities.Poll poll, Random rand)
-        {
-            if (poll == null)
-            {
-                Console.WriteLine("Couldn't find poll. Default option.");
-                return "🌳";
-            }
-
-            int maxVotes = poll.Options.Max(o => o.VotesCount ?? 0);
-
-            IEnumerable<Mastonet.Entities.PollOption> winningOptions = poll.Options.Where(o => o.VotesCount == maxVotes);
-
-            int randIndex = rand.Next(winningOptions.Count());
-
-            Mastonet.Entities.PollOption winningOption = winningOptions.ElementAt(randIndex);
-
-            return winningOption.Title;
-        }
 
         public static string ReplaceElement(string inGrid, int width, int x, int y, string newString)
         {
@@ -197,22 +181,20 @@ namespace TownBuilderBot
         }
 
         public static string GetPollWinningElement(Mastonet.Entities.Poll poll, Random rand) {
-            string fullPollWinner = GetWinningOption(poll, rand);
+            if (poll == null)
+            {
+                Console.WriteLine("Couldn't find poll. Default option.");
+                return "🌳";
+            }
 
-            System.Globalization.StringInfo stringInfo = new System.Globalization.StringInfo(fullPollWinner);
+            int maxVotes = poll.Options.Max(o => o.VotesCount ?? 0);
+            IEnumerable<Mastonet.Entities.PollOption> winningOptions = poll.Options.Where(o => o.VotesCount == maxVotes);
 
+            int randIndex = rand.Next(winningOptions.Count());
+            Mastonet.Entities.PollOption winningOption = winningOptions.ElementAt(randIndex);
+
+            System.Globalization.StringInfo stringInfo = new System.Globalization.StringInfo(winningOption.Title);
             return stringInfo.SubstringByTextElements(0, 1);
-        }
-
-        public static string ReplaceTargetWithPollWinner(Mastonet.Entities.Poll poll, string targetElement, string grid, Random rand)
-        {
-            string fullPollWinner = GetWinningOption(poll, rand);
-
-            System.Globalization.StringInfo stringInfo = new System.Globalization.StringInfo(fullPollWinner);
-
-            string winnerEmoji = stringInfo.SubstringByTextElements(0, 1);
-
-            return grid.Replace(targetElement, winnerEmoji);
         }
     }
 }

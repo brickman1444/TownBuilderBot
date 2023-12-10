@@ -60,7 +60,7 @@ namespace TownBuilderBot
         }
 
         [Fact]
-        public static void WinningOption_PicksObviousWinner()
+        public static void GetPollWinningElement_PicksObviousWinner()
         {
             Mastonet.Entities.Poll poll = new Mastonet.Entities.Poll() {
                 Options = new Mastonet.Entities.PollOption[] {
@@ -79,12 +79,12 @@ namespace TownBuilderBot
                 }
             };
 
-            string winner = Program.GetWinningOption(poll, new System.Random());
+            string winner = Program.GetPollWinningElement(poll, new System.Random());
             Assert.Equal("A", winner);
         }
 
         [Fact]
-        public static void WinningOption_RandomlyBreaksTies()
+        public static void GetPollWinningElement_RandomlyBreaksTies()
         {
             Mastonet.Entities.Poll poll = new Mastonet.Entities.Poll() {
                 Options = new Mastonet.Entities.PollOption[] {
@@ -117,7 +117,7 @@ namespace TownBuilderBot
             for (int i = 0; i < 1000; ++i)
             {
                 System.Random rand = new System.Random();
-                string winner = Program.GetWinningOption(poll, rand);
+                string winner = Program.GetPollWinningElement(poll, rand);
                 wins[winner]++;
             }
 

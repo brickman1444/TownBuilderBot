@@ -33,7 +33,9 @@ namespace TownBuilderBot
 
             Console.WriteLine("Beginning program");
 
-            bool shouldPublishPost = args.Length == 0 || args[0] != "readonly";
+            bool isReadOnly = args.Contains("readonly");
+
+            bool forceZoningMode = args.Contains("zoning");
 
             DotEnv.Load();
 
@@ -47,12 +49,12 @@ namespace TownBuilderBot
 
             string newGrid = UpdateGrid(latestStatusAsCharacters, latestStatus.Poll, 10, rand);
 
-            List<EmojiIndex.EmojiData> pollOptions = EmojiIndex.GetRandomPollOptions(rand);
+            IEnumerable<string> pollOptions = EmojiIndex.GetRandomPollOptions(rand);
 
-            if (shouldPublishPost) {
-                PublishPoll(client, newGrid, pollOptions);
+            if (isReadOnly) {
+                PrintPost(newGrid, pollOptions);
             } else {
-                Console.WriteLine(newGrid);
+                PublishPoll(client, newGrid, pollOptions);
             }
         }
 
@@ -73,16 +75,25 @@ namespace TownBuilderBot
             return statuses.First();
         }
 
-        private static void PublishPoll(MastodonClient client, string newGrid, List<EmojiIndex.EmojiData> pollOptions)
+        private static void PublishPoll(MastodonClient client, string newGrid, IEnumerable<string> pollOptions)
         {
             Console.WriteLine("Publishing Post");
             Mastonet.Entities.PollParameters poll = new Mastonet.Entities.PollParameters()
             {
-                Options = pollOptions.Select(d => d.Emoji + " " + d.Name),
+                Options = pollOptions,
                 ExpiresIn = System.TimeSpan.FromDays(1),
             };
 
             var _ = client.PublishStatus(newGrid, poll: poll).Result;
+        }
+
+        private static void PrintPost(string body, IEnumerable<string> pollOptions)
+        {
+            Console.WriteLine(body);
+            foreach (string option in pollOptions)
+            {
+                Console.WriteLine(option);
+            }
         }
 
         private static string UpdateGrid(string oldGrid, Mastonet.Entities.Poll poll, int gridWidth, Random rand)

@@ -91,9 +91,10 @@ namespace TownBuilderBot
             new EmojiData(Emoji.OtherSymbols.Question.ToString(), "Question Mark", Zone.None),
         };
 
-        public static List<EmojiData> GetRandomPollOptions(System.Random rand)
+        public static IEnumerable<string> GetRandomPollOptions(System.Random rand)
         {
-            return CollectionUtils.RandomFirstN(4, EmojiIndex.All.Where(e => e.Zone != Zone.None), rand);
+            List<EmojiData> datas = CollectionUtils.RandomFirstN(4, EmojiIndex.All.Where(e => e.Zone != Zone.None), rand);
+            return datas.Select(d => d.Emoji + " " + d.Name);
         }
 
         public static string TickVolcano(string oldGrid, int width, Program.Point location, System.Random rand) {

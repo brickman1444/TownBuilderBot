@@ -322,6 +322,24 @@ namespace TownBuilderBot
         }
 
         [Fact]
+        public static void TickGrid_VolcanoDoesntLightNonFlammableElementsOnFire() {
+            System.Random rand = new System.Random();
+            string originalGrid = "🌊🌊🌊\n"
+                                + "🌊🌋🌊\n"
+                                + "🌊🌊🌊";
+            int width = 3;
+            string tickedGrid = Program.TickGridElements(originalGrid, width, rand);
+
+            Assert.Equal(originalGrid, tickedGrid);
+
+            for (int i = 0; i < 1000; i++) {
+                tickedGrid = Program.TickGridElements(tickedGrid, width, rand);
+            }
+
+            Assert.Equal(originalGrid, tickedGrid);
+        }
+
+        [Fact]
         public static void GetZoneGrid_Works() {
             string elementsGrid = "🌳🏠\n"
                                 + "🎢🏬";

@@ -142,6 +142,18 @@ namespace TownBuilderBot
             return grid;
         }
 
+        public static string GetElement(string grid, int width, Point location)
+        {
+            if (location.X < 0 || width <= location.X || location.Y < 0 || width <= location.Y)
+            {
+                return null;
+            }
+
+            int index = location.Y * (width + 1) + location.X;
+            System.Globalization.StringInfo stringInfo = new System.Globalization.StringInfo(grid);
+            return stringInfo.SubstringByTextElements(index, 1);
+        }
+
         private static string ReplaceHTMLWithCharacters(string input)
         {
             return input.Replace("<p>", "").Replace("<br />", "\n").Replace("</p>", "");
@@ -226,9 +238,7 @@ namespace TownBuilderBot
             string zoneGrid = elementsGrid;
             for (int x = 0; x < gridWidth; x++) {
                 for (int y = 0; y < gridWidth; y++) {
-                    int index = y * (gridWidth + 1) + x;
-                    System.Globalization.StringInfo stringInfo = new System.Globalization.StringInfo(elementsGrid);
-                    string element = stringInfo.SubstringByTextElements(index, 1);
+                    string element = GetElement(elementsGrid, gridWidth, new Point{X = x, Y = y});
 
                     EmojiIndex.EmojiData data = EmojiIndex.GetData(element);
 

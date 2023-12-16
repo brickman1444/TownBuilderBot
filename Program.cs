@@ -126,15 +126,20 @@ namespace TownBuilderBot
         }
 
         public static string TickGridElements(string grid, int gridWidth, Random rand) {
-            for (int x = 0; x < gridWidth; x++) {
-                for (int y = 0; y < gridWidth; y++) {
-                    int index = y * (gridWidth + 1) + x;
-                    System.Globalization.StringInfo stringInfo = new System.Globalization.StringInfo(grid);
-                    string element = stringInfo.SubstringByTextElements(index, 1);
+            foreach (EmojiIndex.EmojiData elementData in EmojiIndex.All) {
+                if (elementData.TickFunction == null) {
+                    continue;
+                }
 
-                    EmojiIndex.EmojiData elementData = EmojiIndex.GetData(element);
-                    if (elementData.TickFunction != null) {
-                        grid = elementData.TickFunction(grid, gridWidth, new Point(){X = x, Y = y}, rand);
+                for (int x = 0; x < gridWidth; x++) {
+                    for (int y = 0; y < gridWidth; y++) {
+                        int index = y * (gridWidth + 1) + x;
+                        System.Globalization.StringInfo stringInfo = new System.Globalization.StringInfo(grid);
+                        string element = stringInfo.SubstringByTextElements(index, 1);
+
+                        if (element == elementData.Emoji) {
+                            grid = elementData.TickFunction(grid, gridWidth, new Point(){X = x, Y = y}, rand);
+                        }
                     }
                 }
             }

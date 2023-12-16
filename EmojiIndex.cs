@@ -70,13 +70,12 @@ namespace TownBuilderBot
 
             new EmojiData(Emoji.PlaceGeographic.BeachWithUmbrella.ToString(), "Beach With Umbrella", Zone.Natural, Flags.None),
             new EmojiData(Emoji.PlaceGeographic.Camping.ToString(), "Campsite", Zone.Natural, Flags.Flammable),
-            new EmojiData(Emoji.PlaceGeographic.Desert.ToString(), "Desert", Zone.Natural, Flags.None),
+            new EmojiData("🏜️", "Desert", Zone.Natural, Flags.None),
             new EmojiData(Emoji.PlaceGeographic.DesertIsland.ToString(), "Desert Island", Zone.Natural, Flags.None),
             new EmojiData(Emoji.PlaceGeographic.Fuji.ToString(), "Mount Fuji", Zone.Natural, Flags.None),
             new EmojiData(Emoji.PlaceGeographic.Mountain.ToString(), "Mountain", Zone.Commercial, Flags.None),
             new EmojiData(Emoji.PlaceGeographic.NationalPark.ToString(), "National Park", Zone.Natural, Flags.Flammable),
             new EmojiData(Emoji.PlaceGeographic.SnowCappedMountain.ToString(), "Snow-capped Mountain", Zone.Natural, Flags.None),
-            new EmojiData(Emoji.PlaceGeographic.Volcano.ToString(), "Volcano", Zone.Natural, Flags.None, EmojiIndex.TickVolcano),
 
             new EmojiData(Emoji.PlaceOther.CircusTent.ToString(), "Circus", Zone.Tourism, Flags.Flammable),
             new EmojiData(Emoji.PlaceOther.FerrisWheel.ToString(), "Ferris Wheel", Zone.Tourism, Flags.Flammable),
@@ -96,7 +95,9 @@ namespace TownBuilderBot
             new EmojiData(Emoji.PlantOther.EvergreenTree.ToString(), "Evergreen Tree", Zone.Natural, Flags.Flammable),
             new EmojiData(Emoji.PlantOther.PalmTree.ToString(), "Palm Tree", Zone.Natural, Flags.Flammable),
 
-            new EmojiData(Emoji.SkyAndWeather.Fire.ToString(), "Fire", Zone.None, Flags.None),
+            new EmojiData(Emoji.SkyAndWeather.Fog.ToString(), "Fog", Zone.None, Flags.None, TickFog),
+            new EmojiData(Emoji.SkyAndWeather.Fire.ToString(), "Fire", Zone.None, Flags.None, TickFire),
+            new EmojiData(Emoji.PlaceGeographic.Volcano.ToString(), "Volcano", Zone.Natural, Flags.None, TickVolcano),
 
             new EmojiData(Emoji.OtherSymbols.Question.ToString(), "Question Mark", Zone.None, Flags.None),
         };
@@ -141,6 +142,14 @@ namespace TownBuilderBot
             }
 
             return Program.ReplaceElement(oldGrid, width, fireLocation.X, fireLocation.Y, Emoji.SkyAndWeather.Fire.ToString());
+        }
+
+        public static string TickFire(string oldGrid, int width, Program.Point location, System.Random rand) {
+            return Program.ReplaceElement(oldGrid, width, location.X, location.Y, Emoji.SkyAndWeather.Fog.ToString());
+        }
+
+        public static string TickFog(string oldGrid, int width, Program.Point location, System.Random rand) {
+            return Program.ReplaceElement(oldGrid, width, location.X, location.Y, "🏜️");
         }
 
         public static string GetZoneEmoji(Zone InZone) {

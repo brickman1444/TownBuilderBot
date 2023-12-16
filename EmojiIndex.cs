@@ -108,40 +108,24 @@ namespace TownBuilderBot
         }
 
         public static string TickVolcano(string oldGrid, int width, Program.Point location, System.Random rand) {
-            int choice = rand.Next(8);
+            int choice = rand.Next(4);
             Program.Point fireLocation = new Program.Point{ X = location.X, Y = location.Y};
             switch (choice) {
                 case 0:
                     fireLocation.X += -1;
-                    fireLocation.Y += -1;
+                    fireLocation.Y += 0;
                     break;
                 case 1:
-                    fireLocation.X += -1;
-                    fireLocation.Y += 0;
+                    fireLocation.X += 0;
+                    fireLocation.Y += -1;
                     break;
                 case 2:
-                    fireLocation.X += -1;
-                    fireLocation.Y += 1;
-                    break;
-                case 3:
-                    fireLocation.X += 0;
-                    fireLocation.Y += -1;
-                    break;
-                case 4:
                     fireLocation.X += 0;
                     fireLocation.Y += 1;
-                    break;
-                case 5:
-                    fireLocation.X += 1;
-                    fireLocation.Y += -1;
-                    break;
-                case 6:
-                    fireLocation.X += 1;
-                    fireLocation.Y += 0;
                     break;
                 default:
                     fireLocation.X += 1;
-                    fireLocation.Y += 1;
+                    fireLocation.Y += 0;
                     break;
             }
 

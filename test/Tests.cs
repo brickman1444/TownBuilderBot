@@ -242,9 +242,9 @@ namespace TownBuilderBot
             Program.Point volcanoLocation = new Program.Point{ X = 1, Y = 1};
             grid = EmojiIndex.TickVolcano(grid, width, volcanoLocation, rand);
 
-            string fullFire = "🔥🔥🔥\n"
+            string fullFire = "🌳🔥🌳\n"
                             + "🔥🌋🔥\n"
-                            + "🔥🔥🔥";
+                            + "🌳🔥🌳";
             Assert.NotEqual(fullFire, grid);
             Assert.Contains("🔥", grid);
 
@@ -266,7 +266,7 @@ namespace TownBuilderBot
             grid = EmojiIndex.TickVolcano(grid, width, volcanoLocation, rand);
 
             string fullFire = "🌋🔥🌳\n"
-                            + "🔥🔥🌳\n"
+                            + "🔥🌳🌳\n"
                             + "🌳🌳🌳";
             Assert.NotEqual(fullFire, grid);
 
@@ -288,7 +288,7 @@ namespace TownBuilderBot
             grid = EmojiIndex.TickVolcano(grid, width, volcanoLocation, rand);
 
             string fullFire = "🌳🌳🌳\n"
-                            + "🌳🔥🔥\n"
+                            + "🌳🌳🔥\n"
                             + "🌳🔥🌋";
             Assert.NotEqual(fullFire, grid);
 
@@ -308,9 +308,9 @@ namespace TownBuilderBot
             int width = 3;
             grid = Program.TickGridElements(grid, width, rand);
 
-            string fullFire = "🔥🔥🔥\n"
+            string fullFire = "🌳🔥🌳\n"
                             + "🔥🌋🔥\n"
-                            + "🔥🔥🔥";
+                            + "🌳🔥🌳";
             Assert.NotEqual(fullFire, grid);
             Assert.Contains("🔥", grid);
 

@@ -99,6 +99,11 @@ namespace TownBuilderBot
             new EmojiData(Emoji.SkyAndWeather.Fire.ToString(), "Fire", Zone.None, Flags.None, TickFire),
             new EmojiData(Emoji.PlaceGeographic.Volcano.ToString(), "Volcano", Zone.Natural, Flags.None, TickVolcano),
 
+            new EmojiData(Emoji.AnimalReptile.Dragon.ToString(), "Dragon", Zone.None, Flags.None),
+            new EmojiData(Emoji.AnimalReptile.Crocodile.ToString(), "Crocodile", Zone.None, Flags.None, TickCrocodile),
+            new EmojiData(Emoji.AnimalReptile.Lizard.ToString(), "Lizard", Zone.None, Flags.None, TickLizard),
+            new EmojiData(Emoji.FoodPrepared.Egg.ToString(), "Egg", Zone.Natural, Flags.None, TickEgg),
+
             new EmojiData(Emoji.OtherSymbols.Question.ToString(), "Question Mark", Zone.None, Flags.None),
         };
 
@@ -150,6 +155,18 @@ namespace TownBuilderBot
 
         public static string TickFog(string oldGrid, int width, Program.Point location, System.Random rand) {
             return Program.ReplaceElement(oldGrid, width, location.X, location.Y, "🏜️");
+        }
+
+        public static string TickEgg(string oldGrid, int width, Program.Point location, System.Random rand) {
+            return Program.ReplaceElement(oldGrid, width, location.X, location.Y, Emoji.AnimalReptile.Lizard.ToString());
+        }
+
+        public static string TickLizard(string oldGrid, int width, Program.Point location, System.Random rand) {
+            return Program.ReplaceElement(oldGrid, width, location.X, location.Y, Emoji.AnimalReptile.Crocodile.ToString());
+        }
+
+        public static string TickCrocodile(string oldGrid, int width, Program.Point location, System.Random rand) {
+            return Program.ReplaceElement(oldGrid, width, location.X, location.Y, Emoji.AnimalReptile.Dragon.ToString());
         }
 
         public static string GetZoneEmoji(Zone InZone) {

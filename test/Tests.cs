@@ -330,5 +330,33 @@ namespace TownBuilderBot
 
             Assert.Equal(expectedZoneGrid, zoneGrid);
         }
+
+        [Fact]
+        public static void Eggs_HatchToDragons() {
+            System.Random rand = new System.Random();
+            string elementsGrid = "🌳🌳\n"
+                                + "🌳🥚";
+            int width = 2;
+            string zoneGrid = Program.TickGridElements(elementsGrid, width, rand);
+
+            string lizardGrid = "🌳🌳\n"
+                              + "🌳🦎";
+
+            Assert.Equal(lizardGrid, zoneGrid);
+
+            zoneGrid = Program.TickGridElements(zoneGrid, width, rand);
+
+            string gatorGrid = "🌳🌳\n"
+                             + "🌳🐊";
+
+            Assert.Equal(gatorGrid, zoneGrid);
+
+            zoneGrid = Program.TickGridElements(zoneGrid, width, rand);
+
+            string dragonGrid = "🌳🌳\n"
+                              + "🌳🐉";
+
+            Assert.Equal(dragonGrid, zoneGrid);
+        }
     }
 }

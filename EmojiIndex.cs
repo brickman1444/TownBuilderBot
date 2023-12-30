@@ -161,10 +161,14 @@ namespace TownBuilderBot
 
         private static string TickEgg(string oldGrid, int width, Program.Point location, System.Random rand) {
             Program.Point[] neighborLocations = new Program.Point[] {
+                new Program.Point{ X = location.X + 1, Y = location.Y + 1 },
                 new Program.Point{ X = location.X + 1, Y = location.Y },
-                new Program.Point{ X = location.X - 1, Y = location.Y },
+                new Program.Point{ X = location.X + 1, Y = location.Y - 1 },
                 new Program.Point{ X = location.X, Y = location.Y + 1 },
-                new Program.Point{ X = location.X, Y = location.Y - 1},
+                new Program.Point{ X = location.X, Y = location.Y - 1 },
+                new Program.Point{ X = location.X - 1, Y = location.Y + 1 },
+                new Program.Point{ X = location.X - 1, Y = location.Y },
+                new Program.Point{ X = location.X - 1, Y = location.Y - 1 },
             };
 
             IEnumerable<string> neighborElements = neighborLocations.Select(l => Program.GetElement(oldGrid, width, l)).Where(e => e != null);

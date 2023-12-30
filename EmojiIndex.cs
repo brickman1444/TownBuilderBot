@@ -156,7 +156,7 @@ namespace TownBuilderBot
                 return oldGrid;
             }
 
-            return Program.ReplaceElement(oldGrid, width, fireLocation.X, fireLocation.Y, Emoji.SkyAndWeather.Fire.ToString());
+            return Program.ReplaceElement(oldGrid, width, fireLocation, Emoji.SkyAndWeather.Fire.ToString());
         }
 
         private static string TickEgg(string oldGrid, int width, Program.Point location, System.Random rand) {
@@ -176,17 +176,17 @@ namespace TownBuilderBot
             int numDragonNeighbors = neighbors.Where(d => d.CheckFlag(Flags.SpawnDragon)).Count();
 
             if (numDragonNeighbors > (neighbors.Count() / 2)) {
-                return Program.ReplaceElement(oldGrid, width, location.X, location.Y, Emoji.AnimalReptile.Lizard.ToString());
+                return Program.ReplaceElement(oldGrid, width, location, Emoji.AnimalReptile.Lizard.ToString());
             }
             else
             {
-                return Program.ReplaceElement(oldGrid, width, location.X, location.Y, Emoji.AnimalBird.HatchingChick.ToString());
+                return Program.ReplaceElement(oldGrid, width, location, Emoji.AnimalBird.HatchingChick.ToString());
             }
         }
 
         public static TickFunctionType MakeReplaceTickFunction(string newString) {
             return (string oldGrid, int width, Program.Point location, System.Random rand) => {
-                return Program.ReplaceElement(oldGrid, width, location.X, location.Y, newString);
+                return Program.ReplaceElement(oldGrid, width, location, newString);
             };
         }
 

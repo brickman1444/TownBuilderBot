@@ -116,13 +116,13 @@ namespace TownBuilderBot
 
             string tickedGrid = TickGridElements(oldGrid, gridWidth, rand);
 
-            string newGridWithoutQuestionMark = ReplaceElement(tickedGrid, gridWidth, oldQuestionMarkLocation.X, oldQuestionMarkLocation.Y, winningEmoji);
+            string newGridWithoutQuestionMark = ReplaceElement(tickedGrid, gridWidth, oldQuestionMarkLocation, winningEmoji);
 
             List<Point> possibleLocations = GetPossibleTargetLocations(gridWidth, oldQuestionMarkLocation);
 
             Point newTargetLocation = possibleLocations[rand.Next(possibleLocations.Count)];
 
-            return ReplaceElement(newGridWithoutQuestionMark, gridWidth, newTargetLocation.X, newTargetLocation.Y, QuestionMark);
+            return ReplaceElement(newGridWithoutQuestionMark, gridWidth, newTargetLocation, QuestionMark);
         }
 
         public static string TickGridElements(string grid, int gridWidth, Random rand) {
@@ -163,6 +163,11 @@ namespace TownBuilderBot
         {
             return input.Replace("<p>", "").Replace("<br />", "\n").Replace("</p>", "");
         } 
+
+        public static string ReplaceElement(string inGrid, int width, Point location, string newString)
+        {
+            return ReplaceElement(inGrid, width, location.X, location.Y, newString);
+        }
 
         public static string ReplaceElement(string inGrid, int width, int x, int y, string newString)
         {

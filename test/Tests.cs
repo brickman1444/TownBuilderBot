@@ -332,31 +332,66 @@ namespace TownBuilderBot
         }
 
         [Fact]
-        public static void Eggs_HatchToDragons() {
+        public static void Eggs_SurroundedByMountains_HatchToDragons() {
             System.Random rand = new System.Random();
-            string elementsGrid = "🌳🌳\n"
-                                + "🌳🥚";
+            string elementsGrid = "⛰️🌋\n"
+                                + "⛰️🥚";
             int width = 2;
             string zoneGrid = Program.TickGridElements(elementsGrid, width, rand);
 
-            string lizardGrid = "🌳🌳\n"
-                              + "🌳🦎";
+            string lizardGrid = "⛰️🌋\n"
+                              + "⛰️🦎";
 
             Assert.Equal(lizardGrid, zoneGrid);
 
             zoneGrid = Program.TickGridElements(zoneGrid, width, rand);
 
-            string gatorGrid = "🌳🌳\n"
-                             + "🌳🐊";
+            string gatorGrid = "⛰️🌋\n"
+                             + "⛰️🐊";
 
             Assert.Equal(gatorGrid, zoneGrid);
 
             zoneGrid = Program.TickGridElements(zoneGrid, width, rand);
 
-            string dragonGrid = "🌳🌳\n"
-                              + "🌳🐉";
+            string dragonGrid = "⛰️🌋\n"
+                              + "⛰️🐉";
 
             Assert.Equal(dragonGrid, zoneGrid);
+        }
+
+        [Fact]
+        public static void Eggs_SurroundedByTrees_HatchToEagles() {
+            System.Random rand = new System.Random();
+            string elementsGrid = "🌳🌳\n"
+                                + "🌳🥚";
+            int width = 2;
+            string actualGrid = Program.TickGridElements(elementsGrid, width, rand);
+
+            string expectedGrid = "🌳🌳\n"
+                              + "🌳🐣";
+
+            Assert.Equal(expectedGrid, actualGrid);
+
+            actualGrid = Program.TickGridElements(actualGrid, width, rand);
+
+            expectedGrid = "🌳🌳\n"
+                         + "🌳🐤";
+
+            Assert.Equal(expectedGrid, actualGrid);
+
+            actualGrid = Program.TickGridElements(actualGrid, width, rand);
+
+            expectedGrid = "🌳🌳\n"
+                         + "🌳🐦";
+
+            Assert.Equal(expectedGrid, actualGrid);
+
+            actualGrid = Program.TickGridElements(actualGrid, width, rand);
+            
+            expectedGrid = "🌳🌳\n"
+                         + "🌳🦅";
+
+            Assert.Equal(expectedGrid, actualGrid);
         }
     }
 }

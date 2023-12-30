@@ -113,6 +113,9 @@ namespace TownBuilderBot
             new(Emoji.AnimalMarine.Octopus.ToString(), "Octopus", Zone.None, Flags.Flammable|Flags.Water),
             new(Emoji.AnimalMarine.Fish.ToString(), "Fish", Zone.None, Flags.Flammable|Flags.Water, MakeReplaceTickFunction(Emoji.AnimalMarine.Octopus.ToString())),
 
+            new(Emoji.AnimalMammal.Tiger.ToString(), "Tiger", Zone.None, Flags.Flammable),
+            new(Emoji.AnimalMammal.Cat.ToString(), "Cat", Zone.None, Flags.Flammable, MakeReplaceTickFunction(Emoji.AnimalMammal.Tiger.ToString())),
+
             new(Emoji.AnimalMammal.Rat.ToString(), "Rat", Zone.None, Flags.Flammable),
 
             new(Emoji.AnimalReptile.Dragon.ToString(), "Dragon", Zone.None, Flags.SpawnDragon),
@@ -194,6 +197,11 @@ namespace TownBuilderBot
             int numNaturalNeighbors = neighbors.Where(d => d.Zone == Zone.Natural).Count();
             if (numNaturalNeighbors > halfNeighbors) {
                 return Program.ReplaceElement(oldGrid, width, location, Emoji.AnimalBird.HatchingChick.ToString());
+            }
+
+            int numTourismNeighbors = neighbors.Where(d => d.Zone == Zone.Tourism).Count();
+            if (numTourismNeighbors > halfNeighbors) {
+                return Program.ReplaceElement(oldGrid, width, location, Emoji.AnimalMammal.Cat.ToString());
             }
 
             return Program.ReplaceElement(oldGrid, width, location, Emoji.AnimalMammal.Rat.ToString());

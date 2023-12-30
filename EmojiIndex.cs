@@ -24,6 +24,7 @@ namespace TownBuilderBot
             None = 0,
             Flammable = 1,
             SpawnDragon = 2,
+            Water = 4,
         }
 
         public class EmojiData
@@ -73,24 +74,24 @@ namespace TownBuilderBot
             new(Emoji.PlaceBuilding.StatueOfLiberty.ToString(), "Statue of Liberty", Zone.Tourism, Flags.Flammable),
             new(Emoji.PlaceBuilding.TokyoTower.ToString(), "Tokyo Tower", Zone.Tourism, Flags.Flammable),
 
-            new(Emoji.PlaceGeographic.BeachWithUmbrella.ToString(), "Beach With Umbrella", Zone.Natural, Flags.None),
+            new(Emoji.PlaceGeographic.BeachWithUmbrella.ToString(), "Beach With Umbrella", Zone.Natural, Flags.Water),
             new(Emoji.PlaceGeographic.Camping.ToString(), "Campsite", Zone.Natural, Flags.Flammable),
             new("🏜️", "Desert", Zone.Natural, Flags.None),
-            new(Emoji.PlaceGeographic.DesertIsland.ToString(), "Desert Island", Zone.Natural, Flags.None),
+            new(Emoji.PlaceGeographic.DesertIsland.ToString(), "Desert Island", Zone.Natural, Flags.Water),
             new(Emoji.PlaceGeographic.Fuji.ToString(), "Mount Fuji", Zone.Natural, Flags.SpawnDragon),
             new("⛰️", "Mountain", Zone.Commercial, Flags.SpawnDragon),
-            new(Emoji.PlaceGeographic.NationalPark.ToString(), "National Park", Zone.Natural, Flags.Flammable),
+            new(Emoji.PlaceGeographic.NationalPark.ToString(), "National Park", Zone.Natural, Flags.Flammable|Flags.Water),
             new(Emoji.PlaceGeographic.SnowCappedMountain.ToString(), "Snow-capped Mountain", Zone.Natural, Flags.SpawnDragon),
 
             new(Emoji.PlaceOther.CircusTent.ToString(), "Circus", Zone.Tourism, Flags.Flammable),
             new(Emoji.PlaceOther.FerrisWheel.ToString(), "Ferris Wheel", Zone.Tourism, Flags.Flammable),
-            new(Emoji.PlaceOther.Fountain.ToString(), "Fountain", Zone.Commercial, Flags.None),
+            new(Emoji.PlaceOther.Fountain.ToString(), "Fountain", Zone.Commercial, Flags.Water),
             new(Emoji.PlaceOther.RollerCoaster.ToString(), "Roller Coaster", Zone.Tourism, Flags.Flammable),
             new(Emoji.PlaceOther.Tent.ToString(), "Tent", Zone.Residential, Flags.Flammable),
 
             new(Emoji.Sport.FlagInHole.ToString(), "Golf Course", Zone.Commercial, Flags.Flammable),
 
-            new(Emoji.SkyAndWeather.WaterWave.ToString(), "Water", Zone.Natural, Flags.None),
+            new(Emoji.SkyAndWeather.WaterWave.ToString(), "Water", Zone.Natural, Flags.Water),
 
             new(Emoji.Emotion.Hole.ToString(), "Hole", Zone.Commercial, Flags.None),
 
@@ -108,6 +109,9 @@ namespace TownBuilderBot
             new(Emoji.AnimalBird.Bird.ToString(), "Bird", Zone.None, Flags.Flammable, MakeReplaceTickFunction(Emoji.AnimalBird.Eagle.ToString())),
             new(Emoji.AnimalBird.BabyChick.ToString(), "Baby Chick", Zone.None, Flags.Flammable, MakeReplaceTickFunction(Emoji.AnimalBird.Bird.ToString())),
             new(Emoji.AnimalBird.HatchingChick.ToString(), "Hatching Chick", Zone.None, Flags.Flammable, MakeReplaceTickFunction(Emoji.AnimalBird.BabyChick.ToString())),
+
+            new(Emoji.AnimalMarine.Octopus.ToString(), "Octopus", Zone.None, Flags.Flammable|Flags.Water),
+            new(Emoji.AnimalMarine.Fish.ToString(), "Fish", Zone.None, Flags.Flammable|Flags.Water, MakeReplaceTickFunction(Emoji.AnimalMarine.Octopus.ToString())),
 
             new(Emoji.AnimalReptile.Dragon.ToString(), "Dragon", Zone.None, Flags.SpawnDragon),
             new(Emoji.AnimalReptile.Crocodile.ToString(), "Crocodile", Zone.None, Flags.SpawnDragon, MakeReplaceTickFunction(Emoji.AnimalReptile.Dragon.ToString())),
@@ -174,14 +178,18 @@ namespace TownBuilderBot
             IEnumerable<string> neighborElements = neighborLocations.Select(l => Program.GetElement(oldGrid, width, l)).Where(e => e != null);
             IEnumerable<EmojiData> neighbors = neighborElements.Select(e => GetData(e)).Where(d => d != null);
             int numDragonNeighbors = neighbors.Where(d => d.CheckFlag(Flags.SpawnDragon)).Count();
+            int halfNeighbors = neighbors.Count() / 2;
 
-            if (numDragonNeighbors > (neighbors.Count() / 2)) {
+            if (numDragonNeighbors > halfNeighbors) {
                 return Program.ReplaceElement(oldGrid, width, location, Emoji.AnimalReptile.Lizard.ToString());
             }
-            else
-            {
-                return Program.ReplaceElement(oldGrid, width, location, Emoji.AnimalBird.HatchingChick.ToString());
+
+            int numWaterNeighbors = neighbors.Where(d => d.CheckFlag(Flags.Water)).Count();
+            if (numWaterNeighbors > halfNeighbors) {
+                return Program.ReplaceElement(oldGrid, width, location, Emoji.AnimalMarine.Fish.ToString());
             }
+
+            return Program.ReplaceElement(oldGrid, width, location, Emoji.AnimalBird.HatchingChick.ToString());
         }
 
         public static TickFunctionType MakeReplaceTickFunction(string newString) {

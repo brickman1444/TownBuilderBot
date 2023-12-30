@@ -113,6 +113,8 @@ namespace TownBuilderBot
             new(Emoji.AnimalMarine.Octopus.ToString(), "Octopus", Zone.None, Flags.Flammable|Flags.Water),
             new(Emoji.AnimalMarine.Fish.ToString(), "Fish", Zone.None, Flags.Flammable|Flags.Water, MakeReplaceTickFunction(Emoji.AnimalMarine.Octopus.ToString())),
 
+            new(Emoji.AnimalMammal.Rat.ToString(), "Rat", Zone.None, Flags.Flammable),
+
             new(Emoji.AnimalReptile.Dragon.ToString(), "Dragon", Zone.None, Flags.SpawnDragon),
             new(Emoji.AnimalReptile.Crocodile.ToString(), "Crocodile", Zone.None, Flags.SpawnDragon, MakeReplaceTickFunction(Emoji.AnimalReptile.Dragon.ToString())),
             new(Emoji.AnimalReptile.Lizard.ToString(), "Lizard", Zone.None, Flags.SpawnDragon, MakeReplaceTickFunction(Emoji.AnimalReptile.Crocodile.ToString())),
@@ -177,9 +179,9 @@ namespace TownBuilderBot
 
             IEnumerable<string> neighborElements = neighborLocations.Select(l => Program.GetElement(oldGrid, width, l)).Where(e => e != null);
             IEnumerable<EmojiData> neighbors = neighborElements.Select(e => GetData(e)).Where(d => d != null);
-            int numDragonNeighbors = neighbors.Where(d => d.CheckFlag(Flags.SpawnDragon)).Count();
             int halfNeighbors = neighbors.Count() / 2;
 
+            int numDragonNeighbors = neighbors.Where(d => d.CheckFlag(Flags.SpawnDragon)).Count();
             if (numDragonNeighbors > halfNeighbors) {
                 return Program.ReplaceElement(oldGrid, width, location, Emoji.AnimalReptile.Lizard.ToString());
             }
@@ -189,7 +191,12 @@ namespace TownBuilderBot
                 return Program.ReplaceElement(oldGrid, width, location, Emoji.AnimalMarine.Fish.ToString());
             }
 
-            return Program.ReplaceElement(oldGrid, width, location, Emoji.AnimalBird.HatchingChick.ToString());
+            int numNaturalNeighbors = neighbors.Where(d => d.Zone == Zone.Natural).Count();
+            if (numNaturalNeighbors > halfNeighbors) {
+                return Program.ReplaceElement(oldGrid, width, location, Emoji.AnimalBird.HatchingChick.ToString());
+            }
+
+            return Program.ReplaceElement(oldGrid, width, location, Emoji.AnimalMammal.Rat.ToString());
         }
 
         public static TickFunctionType MakeReplaceTickFunction(string newString) {

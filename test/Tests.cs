@@ -415,5 +415,19 @@ namespace TownBuilderBot
 
             Assert.Equal(expectedGrid, actualGrid);
         }
+
+        [Fact]
+        public static void Eggs_SurroundedByBuilding_HatchToRat() {
+            System.Random rand = new System.Random();
+            string elementsGrid = "🏢🏢\n"
+                                + "🏢🥚";
+            int width = 2;
+            string actualGrid = Program.TickGridElements(elementsGrid, width, rand);
+
+            string expectedGrid = "🏢🏢\n"
+                              + "🏢🐀";
+
+            Assert.Equal(expectedGrid, actualGrid);
+        }
     }
 }

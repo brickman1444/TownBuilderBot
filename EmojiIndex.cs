@@ -44,6 +44,10 @@ namespace TownBuilderBot
                 Flags = InFlags;
                 TickFunction = InTickFunction;
             }
+
+            public bool CheckFlag(Flags flag) {
+                return (Flags & flag) != Flags.None;
+            }
         }
 
         public static EmojiData[] All = new EmojiData[] {
@@ -147,7 +151,7 @@ namespace TownBuilderBot
             }
 
             EmojiData targetData = GetData(targetElement);
-            if ((targetData.Flags & Flags.Flammable) == Flags.None)
+            if (!targetData.CheckFlag(Flags.Flammable))
             {
                 return oldGrid;
             }
@@ -165,7 +169,7 @@ namespace TownBuilderBot
 
             IEnumerable<string> neighborElements = neighborLocations.Select(l => Program.GetElement(oldGrid, width, l)).Where(e => e != null);
             IEnumerable<EmojiData> neighbors = neighborElements.Select(e => GetData(e)).Where(d => d != null);
-            int numDragonNeighbors = neighbors.Where(d => (d.Flags & Flags.SpawnDragon) != Flags.None).Count();
+            int numDragonNeighbors = neighbors.Where(d => d.CheckFlag(Flags.SpawnDragon)).Count();
 
             if (numDragonNeighbors > (neighbors.Count() / 2)) {
                 return Program.ReplaceElement(oldGrid, width, location.X, location.Y, Emoji.AnimalReptile.Lizard.ToString());

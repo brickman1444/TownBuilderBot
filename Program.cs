@@ -186,6 +186,11 @@ namespace TownBuilderBot
             return output;
         }
 
+        public static string ReplaceElement(string inGrid, int width, Point location, Centvrio.Emoji.UnicodeString newString)
+        {
+            return ReplaceElement(inGrid, width, location.X, location.Y, (newString + Centvrio.Emoji.VariationSelectors.VS16).ToString());
+        }
+
         public static string ReplaceElement(string inGrid, int width, Point location, string newString)
         {
             return ReplaceElement(inGrid, width, location.X, location.Y, newString);

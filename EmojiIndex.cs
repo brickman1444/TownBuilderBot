@@ -37,9 +37,9 @@ namespace TownBuilderBot
 
             public TickFunctionType TickFunction;
 
-            public EmojiData(string InEmoji, string InName, Zone InZone, Flags InFlags, TickFunctionType InTickFunction = null)
+            public EmojiData(Emoji.UnicodeString InEmoji, string InName, Zone InZone, Flags InFlags, TickFunctionType InTickFunction = null)
             {
-                Emoji = Program.NormalizeEmojiRepresentation(InEmoji);
+                Emoji = (InEmoji + Centvrio.Emoji.VariationSelectors.VS16).ToString();
                 Name = InName;
                 Zone = InZone;
                 Flags = InFlags;
@@ -52,83 +52,83 @@ namespace TownBuilderBot
         }
 
         public static EmojiData[] All = new EmojiData[] {
-            new(Emoji.PlaceBuilding.Bank.ToString(), "Bank", Zone.Commercial, Flags.Flammable),
-            new(Emoji.PlaceBuilding.Building.ToString(), "Classical Building", Zone.Tourism, Flags.Flammable|Flags.SpawnDragon),
-            new(Emoji.PlaceBuilding.Castle.ToString(), "Castle", Zone.Tourism, Flags.Flammable|Flags.SpawnDragon),
-            new(Emoji.PlaceBuilding.ConvenienceStore.ToString(), "Convenience Store", Zone.Commercial, Flags.Flammable),
-            new(Emoji.PlaceBuilding.DepartmentStore.ToString(), "Department Store", Zone.Commercial, Flags.Flammable),
-            new(Emoji.PlaceBuilding.DerelictHouse.ToString(), "Derelict House", Zone.Residential, Flags.Flammable),
-            new(Emoji.PlaceBuilding.Factory.ToString(), "Factory", Zone.Commercial, Flags.Flammable),
-            new(Emoji.PlaceBuilding.Hospital.ToString(), "Hospital", Zone.Commercial, Flags.Flammable),
-            new(Emoji.PlaceBuilding.Hotel.ToString(), "Hotel", Zone.Tourism, Flags.Flammable),
-            new(Emoji.PlaceBuilding.House.ToString(), "House", Zone.Residential, Flags.Flammable),
-            new(Emoji.PlaceBuilding.Houses.ToString(), "Houses", Zone.Residential, Flags.Flammable),
-            new(Emoji.PlaceBuilding.HouseWithGarden.ToString(), "House With Garden", Zone.Residential, Flags.Flammable),
-            new(Emoji.PlaceBuilding.JapaneseCastle.ToString(), "Castle", Zone.Tourism, Flags.Flammable|Flags.SpawnDragon),
-            new(Emoji.PlaceBuilding.JapanesePostOffice.ToString(), "Post Office", Zone.Commercial, Flags.Flammable),
-            new(Emoji.PlaceBuilding.LoveHotel.ToString(), "Love Hotel", Zone.Commercial, Flags.Flammable),
-            new(Emoji.PlaceBuilding.Office.ToString(), "Office", Zone.Commercial, Flags.Flammable),
-            new(Emoji.PlaceBuilding.PostOffice.ToString(), "Post Office", Zone.Commercial, Flags.Flammable),
-            new(Emoji.PlaceBuilding.School.ToString(), "School", Zone.Residential, Flags.Flammable),
-            new(Emoji.PlaceBuilding.Stadium.ToString(), "Stadium", Zone.Tourism, Flags.Flammable),
-            new(Emoji.PlaceBuilding.StatueOfLiberty.ToString(), "Statue of Liberty", Zone.Tourism, Flags.Flammable),
-            new(Emoji.PlaceBuilding.TokyoTower.ToString(), "Tokyo Tower", Zone.Tourism, Flags.Flammable),
+            new(Emoji.PlaceBuilding.Bank, "Bank", Zone.Commercial, Flags.Flammable),
+            new(Emoji.PlaceBuilding.Building, "Classical Building", Zone.Tourism, Flags.Flammable|Flags.SpawnDragon),
+            new(Emoji.PlaceBuilding.Castle, "Castle", Zone.Tourism, Flags.Flammable|Flags.SpawnDragon),
+            new(Emoji.PlaceBuilding.ConvenienceStore, "Convenience Store", Zone.Commercial, Flags.Flammable),
+            new(Emoji.PlaceBuilding.DepartmentStore, "Department Store", Zone.Commercial, Flags.Flammable),
+            new(Emoji.PlaceBuilding.DerelictHouse, "Derelict House", Zone.Residential, Flags.Flammable),
+            new(Emoji.PlaceBuilding.Factory, "Factory", Zone.Commercial, Flags.Flammable),
+            new(Emoji.PlaceBuilding.Hospital, "Hospital", Zone.Commercial, Flags.Flammable),
+            new(Emoji.PlaceBuilding.Hotel, "Hotel", Zone.Tourism, Flags.Flammable),
+            new(Emoji.PlaceBuilding.House, "House", Zone.Residential, Flags.Flammable),
+            new(Emoji.PlaceBuilding.Houses, "Houses", Zone.Residential, Flags.Flammable),
+            new(Emoji.PlaceBuilding.HouseWithGarden, "House With Garden", Zone.Residential, Flags.Flammable),
+            new(Emoji.PlaceBuilding.JapaneseCastle, "Castle", Zone.Tourism, Flags.Flammable|Flags.SpawnDragon),
+            new(Emoji.PlaceBuilding.JapanesePostOffice, "Post Office", Zone.Commercial, Flags.Flammable),
+            new(Emoji.PlaceBuilding.LoveHotel, "Love Hotel", Zone.Commercial, Flags.Flammable),
+            new(Emoji.PlaceBuilding.Office, "Office", Zone.Commercial, Flags.Flammable),
+            new(Emoji.PlaceBuilding.PostOffice, "Post Office", Zone.Commercial, Flags.Flammable),
+            new(Emoji.PlaceBuilding.School, "School", Zone.Residential, Flags.Flammable),
+            new(Emoji.PlaceBuilding.Stadium, "Stadium", Zone.Tourism, Flags.Flammable),
+            new(Emoji.PlaceBuilding.StatueOfLiberty, "Statue of Liberty", Zone.Tourism, Flags.Flammable),
+            new(Emoji.PlaceBuilding.TokyoTower, "Tokyo Tower", Zone.Tourism, Flags.Flammable),
 
-            new(Emoji.PlaceGeographic.BeachWithUmbrella.ToString(), "Beach With Umbrella", Zone.Natural, Flags.Water),
-            new(Emoji.PlaceGeographic.Camping.ToString(), "Campsite", Zone.Natural, Flags.Flammable),
-            new("🏜️", "Desert", Zone.Natural, Flags.None),
-            new(Emoji.PlaceGeographic.DesertIsland.ToString(), "Desert Island", Zone.Natural, Flags.Water),
-            new(Emoji.PlaceGeographic.Fuji.ToString(), "Mount Fuji", Zone.Natural, Flags.SpawnDragon),
-            new("⛰️", "Mountain", Zone.Commercial, Flags.SpawnDragon),
-            new(Emoji.PlaceGeographic.NationalPark.ToString(), "National Park", Zone.Natural, Flags.Flammable|Flags.Water),
-            new(Emoji.PlaceGeographic.SnowCappedMountain.ToString(), "Snow-capped Mountain", Zone.Natural, Flags.SpawnDragon),
+            new(Emoji.PlaceGeographic.BeachWithUmbrella, "Beach With Umbrella", Zone.Natural, Flags.Water),
+            new(Emoji.PlaceGeographic.Camping, "Campsite", Zone.Natural, Flags.Flammable),
+            new(Emoji.PlaceGeographic.Desert, "Desert", Zone.Natural, Flags.None),
+            new(Emoji.PlaceGeographic.DesertIsland, "Desert Island", Zone.Natural, Flags.Water),
+            new(Emoji.PlaceGeographic.Fuji, "Mount Fuji", Zone.Natural, Flags.SpawnDragon),
+            new(Emoji.PlaceGeographic.Mountain, "Mountain", Zone.Commercial, Flags.SpawnDragon),
+            new(Emoji.PlaceGeographic.NationalPark, "National Park", Zone.Natural, Flags.Flammable|Flags.Water),
+            new(Emoji.PlaceGeographic.SnowCappedMountain, "Snow-capped Mountain", Zone.Natural, Flags.SpawnDragon),
 
-            new(Emoji.PlaceOther.CircusTent.ToString(), "Circus", Zone.Tourism, Flags.Flammable),
-            new(Emoji.PlaceOther.FerrisWheel.ToString(), "Ferris Wheel", Zone.Tourism, Flags.Flammable),
-            new(Emoji.PlaceOther.Fountain.ToString(), "Fountain", Zone.Commercial, Flags.Water),
-            new(Emoji.PlaceOther.RollerCoaster.ToString(), "Roller Coaster", Zone.Tourism, Flags.Flammable),
-            new(Emoji.PlaceOther.Tent.ToString(), "Tent", Zone.Residential, Flags.Flammable),
+            new(Emoji.PlaceOther.CircusTent, "Circus", Zone.Tourism, Flags.Flammable),
+            new(Emoji.PlaceOther.FerrisWheel, "Ferris Wheel", Zone.Tourism, Flags.Flammable),
+            new(Emoji.PlaceOther.Fountain, "Fountain", Zone.Commercial, Flags.Water),
+            new(Emoji.PlaceOther.RollerCoaster, "Roller Coaster", Zone.Tourism, Flags.Flammable),
+            new(Emoji.PlaceOther.Tent, "Tent", Zone.Residential, Flags.Flammable),
 
-            new(Emoji.Sport.FlagInHole.ToString(), "Golf Course", Zone.Commercial, Flags.Flammable),
+            new(Emoji.Sport.FlagInHole, "Golf Course", Zone.Commercial, Flags.Flammable),
 
-            new(Emoji.SkyAndWeather.WaterWave.ToString(), "Water", Zone.Natural, Flags.Water),
+            new(Emoji.SkyAndWeather.WaterWave, "Water", Zone.Natural, Flags.Water),
 
-            new(Emoji.Emotion.Hole.ToString(), "Hole", Zone.Commercial, Flags.None),
+            new(Emoji.Emotion.Hole, "Hole", Zone.Commercial, Flags.None),
 
-            new(Emoji.Science.SatelliteAntenna.ToString(), "Satellite Antenna", Zone.Commercial, Flags.Flammable),
+            new(Emoji.Science.SatelliteAntenna, "Satellite Antenna", Zone.Commercial, Flags.Flammable),
 
-            new(Emoji.PlantOther.DeciduousTree.ToString(), "Deciduous Tree", Zone.Natural, Flags.Flammable),
-            new(Emoji.PlantOther.EvergreenTree.ToString(), "Evergreen Tree", Zone.Natural, Flags.Flammable),
-            new(Emoji.PlantOther.PalmTree.ToString(), "Palm Tree", Zone.Natural, Flags.Flammable),
+            new(Emoji.PlantOther.DeciduousTree, "Deciduous Tree", Zone.Natural, Flags.Flammable),
+            new(Emoji.PlantOther.EvergreenTree, "Evergreen Tree", Zone.Natural, Flags.Flammable),
+            new(Emoji.PlantOther.PalmTree, "Palm Tree", Zone.Natural, Flags.Flammable),
 
-            new(Emoji.SkyAndWeather.Fog.ToString(), "Fog", Zone.None, Flags.SpawnDragon, MakeReplaceTickFunction("🏜️")),
-            new(Emoji.SkyAndWeather.Fire.ToString(), "Fire", Zone.None, Flags.SpawnDragon, MakeReplaceTickFunction(Emoji.SkyAndWeather.Fog.ToString() + Emoji.VariationSelectors.VS16.ToString())),
-            new(Emoji.PlaceGeographic.Volcano.ToString(), "Volcano", Zone.Natural, Flags.SpawnDragon, TickVolcano),
+            new(Emoji.SkyAndWeather.Fog, "Fog", Zone.None, Flags.SpawnDragon, MakeReplaceTickFunction(Emoji.PlaceGeographic.Desert)),
+            new(Emoji.SkyAndWeather.Fire, "Fire", Zone.None, Flags.SpawnDragon, MakeReplaceTickFunction(Emoji.SkyAndWeather.Fog)),
+            new(Emoji.PlaceGeographic.Volcano, "Volcano", Zone.Natural, Flags.SpawnDragon, TickVolcano),
 
-            new(Emoji.AnimalBird.Eagle.ToString(), "Eagle", Zone.None, Flags.Flammable),
-            new(Emoji.AnimalBird.Bird.ToString(), "Bird", Zone.None, Flags.Flammable, MakeReplaceTickFunction(Emoji.AnimalBird.Eagle.ToString() + Emoji.VariationSelectors.VS16.ToString())),
-            new(Emoji.AnimalBird.BabyChick.ToString(), "Baby Chick", Zone.None, Flags.Flammable, MakeReplaceTickFunction(Emoji.AnimalBird.Bird.ToString() + Emoji.VariationSelectors.VS16.ToString())),
-            new(Emoji.AnimalBird.HatchingChick.ToString(), "Hatching Chick", Zone.None, Flags.Flammable, MakeReplaceTickFunction(Emoji.AnimalBird.BabyChick.ToString() + Emoji.VariationSelectors.VS16.ToString())),
+            new(Emoji.AnimalBird.Eagle, "Eagle", Zone.None, Flags.Flammable),
+            new(Emoji.AnimalBird.Bird, "Bird", Zone.None, Flags.Flammable, MakeReplaceTickFunction(Emoji.AnimalBird.Eagle)),
+            new(Emoji.AnimalBird.BabyChick, "Baby Chick", Zone.None, Flags.Flammable, MakeReplaceTickFunction(Emoji.AnimalBird.Bird)),
+            new(Emoji.AnimalBird.HatchingChick, "Hatching Chick", Zone.None, Flags.Flammable, MakeReplaceTickFunction(Emoji.AnimalBird.BabyChick)),
 
-            new(Emoji.AnimalMarine.Octopus.ToString(), "Octopus", Zone.None, Flags.Flammable|Flags.Water),
-            new(Emoji.AnimalMarine.Fish.ToString(), "Fish", Zone.None, Flags.Flammable|Flags.Water, MakeReplaceTickFunction(Emoji.AnimalMarine.Octopus.ToString() + Emoji.VariationSelectors.VS16.ToString())),
+            new(Emoji.AnimalMarine.Octopus, "Octopus", Zone.None, Flags.Flammable|Flags.Water),
+            new(Emoji.AnimalMarine.Fish, "Fish", Zone.None, Flags.Flammable|Flags.Water, MakeReplaceTickFunction(Emoji.AnimalMarine.Octopus)),
 
-            new(Emoji.AnimalMammal.Tiger.ToString(), "Tiger", Zone.None, Flags.Flammable),
-            new(Emoji.AnimalMammal.Cat.ToString(), "Cat", Zone.None, Flags.Flammable, MakeReplaceTickFunction(Emoji.AnimalMammal.Tiger.ToString() + Emoji.VariationSelectors.VS16.ToString())),
+            new(Emoji.AnimalMammal.Tiger, "Tiger", Zone.None, Flags.Flammable),
+            new(Emoji.AnimalMammal.Cat, "Cat", Zone.None, Flags.Flammable, MakeReplaceTickFunction(Emoji.AnimalMammal.Tiger)),
 
-            new(Emoji.AnimalMammal.Rat.ToString(), "Rat", Zone.None, Flags.Flammable),
+            new(Emoji.AnimalMammal.Rat, "Rat", Zone.None, Flags.Flammable),
 
-            new(Emoji.AnimalReptile.Dragon.ToString(), "Dragon", Zone.None, Flags.SpawnDragon),
-            new(Emoji.AnimalReptile.Crocodile.ToString(), "Crocodile", Zone.None, Flags.SpawnDragon, MakeReplaceTickFunction(Emoji.AnimalReptile.Dragon.ToString() + Emoji.VariationSelectors.VS16.ToString())),
-            new(Emoji.AnimalReptile.Lizard.ToString(), "Lizard", Zone.None, Flags.SpawnDragon, MakeReplaceTickFunction(Emoji.AnimalReptile.Crocodile.ToString() + Emoji.VariationSelectors.VS16.ToString())),
-            new(Emoji.FoodPrepared.Egg.ToString(), "Egg", Zone.Natural, Flags.None, TickEgg),
+            new(Emoji.AnimalReptile.Dragon, "Dragon", Zone.None, Flags.SpawnDragon),
+            new(Emoji.AnimalReptile.Crocodile, "Crocodile", Zone.None, Flags.SpawnDragon, MakeReplaceTickFunction(Emoji.AnimalReptile.Dragon)),
+            new(Emoji.AnimalReptile.Lizard, "Lizard", Zone.None, Flags.SpawnDragon, MakeReplaceTickFunction(Emoji.AnimalReptile.Crocodile)),
+            new(Emoji.FoodPrepared.Egg, "Egg", Zone.Natural, Flags.None, TickEgg),
 
-            new(Emoji.OtherSymbols.Question.ToString(), "Question Mark", Zone.None, Flags.None),
+            new(Emoji.OtherSymbols.Question, "Question Mark", Zone.None, Flags.None),
         };
 
         public static IEnumerable<string> GetRandomPollOptions(System.Random rand)
         {
-            List<EmojiData> datas = CollectionUtils.RandomFirstN(4, EmojiIndex.All.Where(e => e.Zone != Zone.None), rand);
+            List<EmojiData> datas = CollectionUtils.RandomFirstN(4, All.Where(e => e.Zone != Zone.None), rand);
             return datas.Select(d => d.Emoji + " " + d.Name);
         }
 
@@ -165,7 +165,7 @@ namespace TownBuilderBot
                 return oldGrid;
             }
 
-            return Program.ReplaceElement(oldGrid, width, fireLocation, Emoji.SkyAndWeather.Fire.ToString() + Emoji.VariationSelectors.VS16.ToString());
+            return Program.ReplaceElement(oldGrid, width, fireLocation, Emoji.SkyAndWeather.Fire);
         }
 
         private static string TickEgg(string oldGrid, int width, Program.Point location, System.Random rand) {
@@ -186,28 +186,28 @@ namespace TownBuilderBot
 
             int numDragonNeighbors = neighbors.Where(d => d.CheckFlag(Flags.SpawnDragon)).Count();
             if (numDragonNeighbors > halfNeighbors) {
-                return Program.ReplaceElement(oldGrid, width, location, Emoji.AnimalReptile.Lizard.ToString() + Emoji.VariationSelectors.VS16.ToString());
+                return Program.ReplaceElement(oldGrid, width, location, Emoji.AnimalReptile.Lizard);
             }
 
             int numWaterNeighbors = neighbors.Where(d => d.CheckFlag(Flags.Water)).Count();
             if (numWaterNeighbors > halfNeighbors) {
-                return Program.ReplaceElement(oldGrid, width, location, Emoji.AnimalMarine.Fish.ToString() + Emoji.VariationSelectors.VS16.ToString());
+                return Program.ReplaceElement(oldGrid, width, location, Emoji.AnimalMarine.Fish);
             }
 
             int numNaturalNeighbors = neighbors.Where(d => d.Zone == Zone.Natural).Count();
             if (numNaturalNeighbors > halfNeighbors) {
-                return Program.ReplaceElement(oldGrid, width, location, Emoji.AnimalBird.HatchingChick.ToString() + Emoji.VariationSelectors.VS16.ToString());
+                return Program.ReplaceElement(oldGrid, width, location, Emoji.AnimalBird.HatchingChick);
             }
 
             int numTourismNeighbors = neighbors.Where(d => d.Zone == Zone.Tourism).Count();
             if (numTourismNeighbors > halfNeighbors) {
-                return Program.ReplaceElement(oldGrid, width, location, Emoji.AnimalMammal.Cat.ToString() + Emoji.VariationSelectors.VS16.ToString());
+                return Program.ReplaceElement(oldGrid, width, location, Emoji.AnimalMammal.Cat);
             }
 
-            return Program.ReplaceElement(oldGrid, width, location, Emoji.AnimalMammal.Rat.ToString() + Emoji.VariationSelectors.VS16.ToString());
+            return Program.ReplaceElement(oldGrid, width, location, Emoji.AnimalMammal.Rat);
         }
 
-        public static TickFunctionType MakeReplaceTickFunction(string newString) {
+        public static TickFunctionType MakeReplaceTickFunction(Emoji.UnicodeString newString) {
             return (string oldGrid, int width, Program.Point location, System.Random rand) => {
                 return Program.ReplaceElement(oldGrid, width, location, newString);
             };

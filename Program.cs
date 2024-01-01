@@ -173,7 +173,7 @@ namespace TownBuilderBot
             while (enumerator.MoveNext())
             {
                 string inputElement = enumerator.GetTextElement();
-                if (inputElement.ToCharArray().Last() == emojiSelector) {
+                if (inputElement == "\n" || inputElement == "\r" || inputElement.ToCharArray().Last() == emojiSelector) {
                     output += inputElement;
                 }
                 else

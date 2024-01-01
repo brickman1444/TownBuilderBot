@@ -484,7 +484,12 @@ namespace TownBuilderBot
         [Fact]
         public void NormalizeEmojiRepresentation_TurnsMultipleTextCharactersIntoEmoji()
         {
-            StringEqual("🏜️🏜️", Program.NormalizeEmojiRepresentation("🏜🏜"));
+            string expected = "🏜️🏜️\n"
+                            + "🏜️🏜️";
+            string actual = Program.NormalizeEmojiRepresentation("🏜🏜\n"
+                                                               + "🏜🏜");
+
+            StringEqual(expected, actual);
         }
 
         private void StringEqual(string expected, string actual)
@@ -500,15 +505,13 @@ namespace TownBuilderBot
                 int minLen = Math.Min(actualInfo.LengthInTextElements, expectedInfo.LengthInTextElements);
                 for (int i = 0; i < maxLen; i++)
                 {
-                    string expectedTextElement = expectedInfo.SubstringByTextElements(i, 1);
-                    string actualTextElement = actualInfo.SubstringByTextElements(i, 1);
                     output.WriteLine("{0} {1,-3} {2,-4} {3,-3}  {4,-4} {5,-3}",
-                        i < minLen && expectedTextElement == actualTextElement ? " " : "*", // put a mark beside a differing row
+                        i < minLen && expectedInfo.SubstringByTextElements(i, 1) == actualInfo.SubstringByTextElements(i, 1) ? " " : "*", // put a mark beside a differing row
                         i, // the index
-                        i < expectedInfo.LengthInTextElements ? PrintableCharacterArray(expectedTextElement) : "", // character decimal value
-                        i < expectedInfo.LengthInTextElements ? expectedTextElement : "", // character safe string
-                        i < actualInfo.LengthInTextElements ? PrintableCharacterArray(actualTextElement) : "", // character decimal value
-                        i < actualInfo.LengthInTextElements ? actualTextElement : "" // character safe string
+                        i < expectedInfo.LengthInTextElements ? PrintableCharacterArray(expectedInfo.SubstringByTextElements(i, 1)) : "", // character decimal value
+                        i < expectedInfo.LengthInTextElements ? ToLiteral(expectedInfo.SubstringByTextElements(i, 1)) : "", // character safe string
+                        i < actualInfo.LengthInTextElements ? PrintableCharacterArray(actualInfo.SubstringByTextElements(i, 1)) : "", // character decimal value
+                        i < actualInfo.LengthInTextElements ? ToLiteral(actualInfo.SubstringByTextElements(i, 1)) : "" // character safe string
                     );
                 }
             }

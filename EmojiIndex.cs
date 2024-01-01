@@ -39,7 +39,7 @@ namespace TownBuilderBot
 
             public EmojiData(string InEmoji, string InName, Zone InZone, Flags InFlags, TickFunctionType InTickFunction = null)
             {
-                Emoji = InEmoji;
+                Emoji = Program.NormalizeEmojiRepresentation(InEmoji);
                 Name = InName;
                 Zone = InZone;
                 Flags = InFlags;
@@ -102,25 +102,25 @@ namespace TownBuilderBot
             new(Emoji.PlantOther.PalmTree.ToString(), "Palm Tree", Zone.Natural, Flags.Flammable),
 
             new(Emoji.SkyAndWeather.Fog.ToString(), "Fog", Zone.None, Flags.SpawnDragon, MakeReplaceTickFunction("🏜️")),
-            new(Emoji.SkyAndWeather.Fire.ToString(), "Fire", Zone.None, Flags.SpawnDragon, MakeReplaceTickFunction(Emoji.SkyAndWeather.Fog.ToString())),
+            new(Emoji.SkyAndWeather.Fire.ToString(), "Fire", Zone.None, Flags.SpawnDragon, MakeReplaceTickFunction(Emoji.SkyAndWeather.Fog.ToString() + Emoji.VariationSelectors.VS16.ToString())),
             new(Emoji.PlaceGeographic.Volcano.ToString(), "Volcano", Zone.Natural, Flags.SpawnDragon, TickVolcano),
 
             new(Emoji.AnimalBird.Eagle.ToString(), "Eagle", Zone.None, Flags.Flammable),
-            new(Emoji.AnimalBird.Bird.ToString(), "Bird", Zone.None, Flags.Flammable, MakeReplaceTickFunction(Emoji.AnimalBird.Eagle.ToString())),
-            new(Emoji.AnimalBird.BabyChick.ToString(), "Baby Chick", Zone.None, Flags.Flammable, MakeReplaceTickFunction(Emoji.AnimalBird.Bird.ToString())),
-            new(Emoji.AnimalBird.HatchingChick.ToString(), "Hatching Chick", Zone.None, Flags.Flammable, MakeReplaceTickFunction(Emoji.AnimalBird.BabyChick.ToString())),
+            new(Emoji.AnimalBird.Bird.ToString(), "Bird", Zone.None, Flags.Flammable, MakeReplaceTickFunction(Emoji.AnimalBird.Eagle.ToString() + Emoji.VariationSelectors.VS16.ToString())),
+            new(Emoji.AnimalBird.BabyChick.ToString(), "Baby Chick", Zone.None, Flags.Flammable, MakeReplaceTickFunction(Emoji.AnimalBird.Bird.ToString() + Emoji.VariationSelectors.VS16.ToString())),
+            new(Emoji.AnimalBird.HatchingChick.ToString(), "Hatching Chick", Zone.None, Flags.Flammable, MakeReplaceTickFunction(Emoji.AnimalBird.BabyChick.ToString() + Emoji.VariationSelectors.VS16.ToString())),
 
             new(Emoji.AnimalMarine.Octopus.ToString(), "Octopus", Zone.None, Flags.Flammable|Flags.Water),
-            new(Emoji.AnimalMarine.Fish.ToString(), "Fish", Zone.None, Flags.Flammable|Flags.Water, MakeReplaceTickFunction(Emoji.AnimalMarine.Octopus.ToString())),
+            new(Emoji.AnimalMarine.Fish.ToString(), "Fish", Zone.None, Flags.Flammable|Flags.Water, MakeReplaceTickFunction(Emoji.AnimalMarine.Octopus.ToString() + Emoji.VariationSelectors.VS16.ToString())),
 
             new(Emoji.AnimalMammal.Tiger.ToString(), "Tiger", Zone.None, Flags.Flammable),
-            new(Emoji.AnimalMammal.Cat.ToString(), "Cat", Zone.None, Flags.Flammable, MakeReplaceTickFunction(Emoji.AnimalMammal.Tiger.ToString())),
+            new(Emoji.AnimalMammal.Cat.ToString(), "Cat", Zone.None, Flags.Flammable, MakeReplaceTickFunction(Emoji.AnimalMammal.Tiger.ToString() + Emoji.VariationSelectors.VS16.ToString())),
 
             new(Emoji.AnimalMammal.Rat.ToString(), "Rat", Zone.None, Flags.Flammable),
 
             new(Emoji.AnimalReptile.Dragon.ToString(), "Dragon", Zone.None, Flags.SpawnDragon),
-            new(Emoji.AnimalReptile.Crocodile.ToString(), "Crocodile", Zone.None, Flags.SpawnDragon, MakeReplaceTickFunction(Emoji.AnimalReptile.Dragon.ToString())),
-            new(Emoji.AnimalReptile.Lizard.ToString(), "Lizard", Zone.None, Flags.SpawnDragon, MakeReplaceTickFunction(Emoji.AnimalReptile.Crocodile.ToString())),
+            new(Emoji.AnimalReptile.Crocodile.ToString(), "Crocodile", Zone.None, Flags.SpawnDragon, MakeReplaceTickFunction(Emoji.AnimalReptile.Dragon.ToString() + Emoji.VariationSelectors.VS16.ToString())),
+            new(Emoji.AnimalReptile.Lizard.ToString(), "Lizard", Zone.None, Flags.SpawnDragon, MakeReplaceTickFunction(Emoji.AnimalReptile.Crocodile.ToString() + Emoji.VariationSelectors.VS16.ToString())),
             new(Emoji.FoodPrepared.Egg.ToString(), "Egg", Zone.Natural, Flags.None, TickEgg),
 
             new(Emoji.OtherSymbols.Question.ToString(), "Question Mark", Zone.None, Flags.None),
@@ -165,7 +165,7 @@ namespace TownBuilderBot
                 return oldGrid;
             }
 
-            return Program.ReplaceElement(oldGrid, width, fireLocation, Emoji.SkyAndWeather.Fire.ToString());
+            return Program.ReplaceElement(oldGrid, width, fireLocation, Emoji.SkyAndWeather.Fire.ToString() + Emoji.VariationSelectors.VS16.ToString());
         }
 
         private static string TickEgg(string oldGrid, int width, Program.Point location, System.Random rand) {
@@ -186,25 +186,25 @@ namespace TownBuilderBot
 
             int numDragonNeighbors = neighbors.Where(d => d.CheckFlag(Flags.SpawnDragon)).Count();
             if (numDragonNeighbors > halfNeighbors) {
-                return Program.ReplaceElement(oldGrid, width, location, Emoji.AnimalReptile.Lizard.ToString());
+                return Program.ReplaceElement(oldGrid, width, location, Emoji.AnimalReptile.Lizard.ToString() + Emoji.VariationSelectors.VS16.ToString());
             }
 
             int numWaterNeighbors = neighbors.Where(d => d.CheckFlag(Flags.Water)).Count();
             if (numWaterNeighbors > halfNeighbors) {
-                return Program.ReplaceElement(oldGrid, width, location, Emoji.AnimalMarine.Fish.ToString());
+                return Program.ReplaceElement(oldGrid, width, location, Emoji.AnimalMarine.Fish.ToString() + Emoji.VariationSelectors.VS16.ToString());
             }
 
             int numNaturalNeighbors = neighbors.Where(d => d.Zone == Zone.Natural).Count();
             if (numNaturalNeighbors > halfNeighbors) {
-                return Program.ReplaceElement(oldGrid, width, location, Emoji.AnimalBird.HatchingChick.ToString());
+                return Program.ReplaceElement(oldGrid, width, location, Emoji.AnimalBird.HatchingChick.ToString() + Emoji.VariationSelectors.VS16.ToString());
             }
 
             int numTourismNeighbors = neighbors.Where(d => d.Zone == Zone.Tourism).Count();
             if (numTourismNeighbors > halfNeighbors) {
-                return Program.ReplaceElement(oldGrid, width, location, Emoji.AnimalMammal.Cat.ToString());
+                return Program.ReplaceElement(oldGrid, width, location, Emoji.AnimalMammal.Cat.ToString() + Emoji.VariationSelectors.VS16.ToString());
             }
 
-            return Program.ReplaceElement(oldGrid, width, location, Emoji.AnimalMammal.Rat.ToString());
+            return Program.ReplaceElement(oldGrid, width, location, Emoji.AnimalMammal.Rat.ToString() + Emoji.VariationSelectors.VS16.ToString());
         }
 
         public static TickFunctionType MakeReplaceTickFunction(string newString) {

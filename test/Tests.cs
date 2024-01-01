@@ -238,42 +238,42 @@ namespace TownBuilderBot
             System.Random rand = new System.Random();
             for (int i = 0; i < 1000; i++) {
                 IEnumerable<string> options = EmojiIndex.GetRandomPollOptions(rand);
-                Assert.DoesNotContain("🔥 Fire", options);
+                Assert.DoesNotContain("🔥️ Fire", options);
             }
         }
 
         [Fact]
-        public static void TickVolcano_WorksInTopLeftCorner() {
+        public void TickVolcano_WorksInTopLeftCorner() {
             System.Random rand = new System.Random();
-            string grid = "🌋🌳🌳\n"
-                        + "🌳🌳🌳\n"
-                        + "🌳🌳🌳";
+            string grid = "🌋🌳️🌳️\n"
+                        + "🌳️🌳️🌳️\n"
+                        + "🌳️🌳️🌳️";
             int width = 3;
             Program.Point volcanoLocation = new Program.Point{ X = 0, Y = 0};
 
-            string fullFire = "🌋🔥🌳\n"
-                            + "🔥🌳🌳\n"
-                            + "🌳🌳🌳";
+            string fullFire = "🌋🔥️🌳️\n"
+                            + "🔥️🌳️🌳️\n"
+                            + "🌳️🌳️🌳️";
 
             for (int i = 0; i < 1000; i++) {
                 grid = EmojiIndex.TickVolcano(grid, width, volcanoLocation, rand);
             }
 
-            Assert.Equal(fullFire, grid);
+            StringEqual(fullFire, grid);
         }
 
         [Fact]
         public static void TickVolcano_WorksInBottomRightCorner() {
             System.Random rand = new System.Random();
-            string grid = "🌳🌳🌳\n"
-                        + "🌳🌳🌳\n"
-                        + "🌳🌳🌋";
+            string grid = "🌳️🌳️🌳️\n"
+                        + "🌳️🌳️🌳️\n"
+                        + "🌳️🌳️🌋";
             int width = 3;
             Program.Point volcanoLocation = new Program.Point{ X = 2, Y = 2};
 
-            string expectedResult = "🌳🌳🌳\n"
-                                  + "🌳🌳🔥\n"
-                                  + "🌳🔥🌋";
+            string expectedResult = "🌳️🌳️🌳️\n"
+                                  + "🌳️🌳️🔥️\n"
+                                  + "🌳️🔥️🌋";
 
             for (int i = 0; i < 1000; i++) {
                 grid = EmojiIndex.TickVolcano(grid, width, volcanoLocation, rand);
@@ -285,12 +285,12 @@ namespace TownBuilderBot
         [Fact]
         public static void TickGrid_UpdatesVolcano() {
             System.Random rand = new System.Random();
-            string grid = "🌳🌳🌳\n"
-                        + "🌳🌋🌳\n"
-                        + "🌳🌳🌳";
+            string grid = "🌳️🌳️🌳️\n"
+                        + "🌳️🌋🌳️\n"
+                        + "🌳️🌳️🌳️";
             int width = 3;
             grid = Program.TickGridElements(grid, width, rand);
-            Assert.Contains("🔥", grid);
+            Assert.Contains("🔥️", grid);
 
             grid = Program.TickGridElements(grid, width, rand);
             Assert.Contains("🌫️", grid);
@@ -298,9 +298,9 @@ namespace TownBuilderBot
             grid = Program.TickGridElements(grid, width, rand);
             Assert.Contains("🏜️", grid);
 
-            string expectedResult = "🌳🏜️🌳\n"
+            string expectedResult = Program.NormalizeEmojiRepresentation("🌳️🏜️🌳️\n"
                                   + "🏜️🌋🏜️\n"
-                                  + "🌳🏜️🌳";
+                                  + "🌳️🏜️🌳️");
             Assert.NotEqual(expectedResult, grid);
 
             for (int i = 0; i < 1000; i++) {
@@ -313,9 +313,9 @@ namespace TownBuilderBot
         [Fact]
         public static void TickGrid_VolcanoDoesntLightNonFlammableElementsOnFire() {
             System.Random rand = new System.Random();
-            string originalGrid = "🌊🌊🌊\n"
+            string originalGrid = Program.NormalizeEmojiRepresentation("🌊🌊🌊\n"
                                 + "🌊🌋🌊\n"
-                                + "🌊🌊🌊";
+                                + "🌊🌊🌊");
             int width = 3;
             string tickedGrid = Program.TickGridElements(originalGrid, width, rand);
 
@@ -330,8 +330,8 @@ namespace TownBuilderBot
 
         [Fact]
         public static void GetZoneGrid_Works() {
-            string elementsGrid = "🌳🏠\n"
-                                + "🎢🏬";
+            string elementsGrid = "🌳️🏠️\n"
+                                + "🎢️🏬️";
             int width = 2;
             string zoneGrid = Program.GetZoneGrid(elementsGrid, width);
 
@@ -342,132 +342,132 @@ namespace TownBuilderBot
         }
 
         [Fact]
-        public static void Eggs_SurroundedByMountains_HatchToDragons() {
+        public void Eggs_SurroundedByMountains_HatchToDragons() {
             System.Random rand = new System.Random();
             string elementsGrid = "⛰️🌋\n"
-                                + "⛰️🥚";
+                                + "⛰️🥚️";
             int width = 2;
             string zoneGrid = Program.TickGridElements(elementsGrid, width, rand);
 
-            string lizardGrid = "⛰️🌋\n"
-                              + "⛰️🦎";
+            string lizardGrid = Program.NormalizeEmojiRepresentation("⛰️🌋\n"
+                              + "⛰️🦎");
 
-            Assert.Equal(lizardGrid, zoneGrid);
-
-            zoneGrid = Program.TickGridElements(zoneGrid, width, rand);
-
-            string gatorGrid = "⛰️🌋\n"
-                             + "⛰️🐊";
-
-            Assert.Equal(gatorGrid, zoneGrid);
+            StringEqual(lizardGrid, zoneGrid);
 
             zoneGrid = Program.TickGridElements(zoneGrid, width, rand);
 
-            string dragonGrid = "⛰️🌋\n"
-                              + "⛰️🐉";
+            string gatorGrid = Program.NormalizeEmojiRepresentation("⛰️🌋\n"
+                             + "⛰️🐊");
 
-            Assert.Equal(dragonGrid, zoneGrid);
+            StringEqual(gatorGrid, zoneGrid);
+
+            zoneGrid = Program.TickGridElements(zoneGrid, width, rand);
+
+            string dragonGrid = Program.NormalizeEmojiRepresentation("⛰️🌋\n"
+                              + "⛰️🐉");
+
+            StringEqual(dragonGrid, zoneGrid);
         }
 
         [Fact]
-        public static void Eggs_SurroundedByTrees_HatchToEagles() {
+        public void Eggs_SurroundedByTrees_HatchToEagles() {
             System.Random rand = new System.Random();
-            string elementsGrid = "🌳🌳\n"
-                                + "🌳🥚";
+            string elementsGrid = Program.NormalizeEmojiRepresentation("🌳🌳\n"
+                                + "🌳🥚️");
             int width = 2;
             string actualGrid = Program.TickGridElements(elementsGrid, width, rand);
 
-            string expectedGrid = "🌳🌳\n"
-                              + "🌳🐣";
+            string expectedGrid = Program.NormalizeEmojiRepresentation("🌳🌳\n"
+                              + "🌳🐣️");
 
-            Assert.Equal(expectedGrid, actualGrid);
-
-            actualGrid = Program.TickGridElements(actualGrid, width, rand);
-
-            expectedGrid = "🌳🌳\n"
-                         + "🌳🐤";
-
-            Assert.Equal(expectedGrid, actualGrid);
+            StringEqual(expectedGrid, actualGrid);
 
             actualGrid = Program.TickGridElements(actualGrid, width, rand);
 
-            expectedGrid = "🌳🌳\n"
-                         + "🌳🐦";
+            expectedGrid = Program.NormalizeEmojiRepresentation("🌳🌳\n"
+                         + "🌳🐤️");
 
-            Assert.Equal(expectedGrid, actualGrid);
+            StringEqual(expectedGrid, actualGrid);
+
+            actualGrid = Program.TickGridElements(actualGrid, width, rand);
+
+            expectedGrid = Program.NormalizeEmojiRepresentation("🌳🌳\n"
+                         + "🌳🐦️");
+
+            StringEqual(expectedGrid, actualGrid);
 
             actualGrid = Program.TickGridElements(actualGrid, width, rand);
             
-            expectedGrid = "🌳🌳\n"
-                         + "🌳🦅";
+            expectedGrid = Program.NormalizeEmojiRepresentation("🌳🌳\n"
+                         + "🌳🦅️");
 
-            Assert.Equal(expectedGrid, actualGrid);
+            StringEqual(expectedGrid, actualGrid);
         }
 
         
         [Fact]
-        public static void Eggs_SurroundedByWater_HatchToOctopus() {
+        public void Eggs_SurroundedByWater_HatchToOctopus() {
             System.Random rand = new System.Random();
-            string elementsGrid = "🌊🌊\n"
-                                + "🌊🥚";
+            string elementsGrid = "🌊️🌊️\n"
+                                + "🌊️🥚️";
             int width = 2;
             string actualGrid = Program.TickGridElements(elementsGrid, width, rand);
 
-            string expectedGrid = "🌊🌊\n"
-                              + "🌊🐟";
+            string expectedGrid = "🌊️🌊️\n"
+                              + "🌊️🐟️";
 
-            Assert.Equal(expectedGrid, actualGrid);
+            StringEqual(expectedGrid, actualGrid);
 
             actualGrid = Program.TickGridElements(actualGrid, width, rand);
 
-            expectedGrid = "🌊🌊\n"
-                         + "🌊🐙";
+            expectedGrid = "🌊️🌊️\n"
+                         + "🌊️🐙️";
 
-            Assert.Equal(expectedGrid, actualGrid);
+            StringEqual(expectedGrid, actualGrid);
         }
 
         [Fact]
-        public static void Eggs_SurroundedByBuilding_HatchToRat() {
+        public void Eggs_SurroundedByBuilding_HatchToRat() {
             System.Random rand = new System.Random();
             string elementsGrid = "🏢🏢\n"
-                                + "🏢🥚";
+                                + "🏢🥚️";
             int width = 2;
             string actualGrid = Program.TickGridElements(elementsGrid, width, rand);
 
-            string expectedGrid = "🏢🏢\n"
-                              + "🏢🐀";
+            string expectedGrid = Program.NormalizeEmojiRepresentation("🏢🏢\n"
+                              + "🏢🐀");
 
-            Assert.Equal(expectedGrid, actualGrid);
+            StringEqual(expectedGrid, actualGrid);
         }
 
         [Fact]
-        public static void Eggs_SurroundedByTourism_HatchToTiger() {
+        public void Eggs_SurroundedByTourism_HatchToTiger() {
             System.Random rand = new System.Random();
-            string elementsGrid = "🎪🎪\n"
-                                + "🎪🥚";
+            string elementsGrid = "🎪️🎪️\n"
+                                + "🎪️🥚️";
             int width = 2;
             string actualGrid = Program.TickGridElements(elementsGrid, width, rand);
 
-            string expectedGrid = "🎪🎪\n"
-                              + "🎪🐈";
+            string expectedGrid = "🎪️🎪️\n"
+                                + "🎪️🐈️";
 
-            Assert.Equal(expectedGrid, actualGrid);
+            StringEqual(expectedGrid, actualGrid);
 
             actualGrid = Program.TickGridElements(actualGrid, width, rand);
 
-            expectedGrid = "🎪🎪\n"
-                         + "🎪🐅";
+            expectedGrid = "🎪️🎪️\n"
+                         + "🎪️🐅️";
 
-            Assert.Equal(expectedGrid, actualGrid);
+            StringEqual(expectedGrid, actualGrid);
         }
 
-        // [Fact]
-        // public static void TickElements_HandlesMixedEmojiRepresentation()
-        // {
-        //     string grid = "🌲🏛🌊⛰⛲🏕🎡🌳🏜️🏜️\n🏡🏚🏝🌊🌳🏩🥚🏖🌋🏜️\n🕳🌊🏝⛰🏖🏖🏜️🏜🕳🏜️\n🗻🏫🏜📡🏜️🌋🏜️🏝🏚🌳\n❓📡📡🌴⛰🏜️🏜️🌴🏔🌴\n🎢🕳🌳🕳🌴🌳🌲🏕🏞🏝\n🎡🗻🏞⛲🏕🌲⛺🎢🏯🕳\n🌊🏔🏕🌳🏞🏕🏩🌊🎡🏖\n🏔🕳🏔🕳🏜️🏜️🏜️🌲🏞🌴\n🐉⛰🏜️🌋🏜️🌋🏔🏜⛺🐤";
-        //     Random rand = new Random();
-        //     Program.TickGridElements(grid, 10, rand);
-        // }
+        [Fact]
+        public static void TickElements_HandlesMixedEmojiRepresentation()
+        {
+            string grid = "🌲🏛🌊⛰⛲🏕🎡🌳🏜️🏜️\n🏡🏚🏝🌊🌳🏩🥚🏖🌋🏜️\n🕳🌊🏝⛰🏖🏖🏜️🏜🕳🏜️\n🗻🏫🏜📡🏜️🌋🏜️🏝🏚🌳\n❓📡📡🌴⛰🏜️🏜️🌴🏔🌴\n🎢🕳🌳🕳🌴🌳🌲🏕🏞🏝\n🎡🗻🏞⛲🏕🌲⛺🎢🏯🕳\n🌊🏔🏕🌳🏞🏕🏩🌊🎡🏖\n🏔🕳🏔🕳🏜️🏜️🏜️🌲🏞🌴\n🐉⛰🏜️🌋🏜️🌋🏔🏜⛺🐤";
+            Random rand = new Random();
+            Program.TickGridElements(grid, 10, rand);
+        }
 
         [Fact]
         public static void NormalizeEmojiRepresentation_TurnsTextIntoEmoji()

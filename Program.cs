@@ -126,6 +126,7 @@ namespace TownBuilderBot
         }
 
         public static string TickGridElements(string grid, int gridWidth, Random rand) {
+            grid = NormalizeEmojiRepresentation(grid);
             foreach (EmojiIndex.EmojiData elementData in EmojiIndex.All) {
                 if (elementData.TickFunction == null) {
                     continue;

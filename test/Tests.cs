@@ -1,10 +1,20 @@
+using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Text.RegularExpressions;
 using Xunit;
+using Xunit.Abstractions;
 
 namespace TownBuilderBot
 {
-    public static class Tests
+    public class Tests
     {
+        private readonly ITestOutputHelper output;
+        public Tests(ITestOutputHelper outputHelper)
+        {
+            output = outputHelper;
+        }
+
         [Fact]
         public static void ReplaceElement_OnlyChangesTargetElement()
         {
@@ -220,7 +230,7 @@ namespace TownBuilderBot
                 new Program.Point{ X = 2, Y = 2 },
             };
 
-            Assert.Equal(expectedLocations, locations);
+            Assert.Equal(expectedLocations, locations.ToArray());
         }
 
         [Fact]
@@ -449,6 +459,73 @@ namespace TownBuilderBot
                          + "🎪🐅";
 
             Assert.Equal(expectedGrid, actualGrid);
+        }
+
+        // [Fact]
+        // public static void TickElements_HandlesMixedEmojiRepresentation()
+        // {
+        //     string grid = "🌲🏛🌊⛰⛲🏕🎡🌳🏜️🏜️\n🏡🏚🏝🌊🌳🏩🥚🏖🌋🏜️\n🕳🌊🏝⛰🏖🏖🏜️🏜🕳🏜️\n🗻🏫🏜📡🏜️🌋🏜️🏝🏚🌳\n❓📡📡🌴⛰🏜️🏜️🌴🏔🌴\n🎢🕳🌳🕳🌴🌳🌲🏕🏞🏝\n🎡🗻🏞⛲🏕🌲⛺🎢🏯🕳\n🌊🏔🏕🌳🏞🏕🏩🌊🎡🏖\n🏔🕳🏔🕳🏜️🏜️🏜️🌲🏞🌴\n🐉⛰🏜️🌋🏜️🌋🏔🏜⛺🐤";
+        //     Random rand = new Random();
+        //     Program.TickGridElements(grid, 10, rand);
+        // }
+
+        [Fact]
+        public static void NormalizeEmojiRepresentation_TurnsTextIntoEmoji()
+        {
+            Assert.Equal("🏜️", Program.NormalizeEmojiRepresentation("🏜"));
+        }
+
+        [Fact]
+        public static void NormalizeEmojiRepresentation_LeavesEmojiAsIs()
+        {
+            Assert.Equal("🏜️", Program.NormalizeEmojiRepresentation("🏜️"));
+        }
+
+        [Fact]
+        public void NormalizeEmojiRepresentation_TurnsMultipleTextCharactersIntoEmoji()
+        {
+            StringEqual("🏜️🏜️", Program.NormalizeEmojiRepresentation("🏜🏜"));
+        }
+
+        private void StringEqual(string expected, string actual)
+        {
+            if (!string.Equals(expected, actual))
+            {
+                System.Globalization.StringInfo expectedInfo = new System.Globalization.StringInfo(expected);
+                System.Globalization.StringInfo actualInfo = new System.Globalization.StringInfo(actual);
+
+                output.WriteLine("  Index Expected  Actual");
+                output.WriteLine("-------------------------");
+                int maxLen = Math.Max(actualInfo.LengthInTextElements, expectedInfo.LengthInTextElements);
+                int minLen = Math.Min(actualInfo.LengthInTextElements, expectedInfo.LengthInTextElements);
+                for (int i = 0; i < maxLen; i++)
+                {
+                    string expectedTextElement = expectedInfo.SubstringByTextElements(i, 1);
+                    string actualTextElement = actualInfo.SubstringByTextElements(i, 1);
+                    output.WriteLine("{0} {1,-3} {2,-4} {3,-3}  {4,-4} {5,-3}",
+                        i < minLen && expectedTextElement == actualTextElement ? " " : "*", // put a mark beside a differing row
+                        i, // the index
+                        i < expectedInfo.LengthInTextElements ? PrintableCharacterArray(expectedTextElement) : "", // character decimal value
+                        i < expectedInfo.LengthInTextElements ? expectedTextElement : "", // character safe string
+                        i < actualInfo.LengthInTextElements ? PrintableCharacterArray(actualTextElement) : "", // character decimal value
+                        i < actualInfo.LengthInTextElements ? actualTextElement : "" // character safe string
+                    );
+                }
+            }
+
+            Assert.Equal(expected, actual);
+        }
+
+        private static string ToLiteral(string value)
+        {
+            return Regex.Escape(value);
+        }
+
+        private static string PrintableCharacterArray(string value)
+        {
+            char[] chars = value.ToCharArray();
+            IEnumerable<string> strings = value.ToCharArray().Select(c => string.Format("{0:X}", (int)c));
+            return string.Join(", ", strings);
         }
     }
 }

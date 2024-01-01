@@ -162,7 +162,28 @@ namespace TownBuilderBot
         private static string ReplaceHTMLWithCharacters(string input)
         {
             return input.Replace("<p>", "").Replace("<br />", "\n").Replace("</p>", "");
-        } 
+        }
+
+        public static string NormalizeEmojiRepresentation(string input)
+        {
+            string output = "";
+            char emojiSelector = Centvrio.Emoji.VariationSelectors.VS16.ToCharArray().Last();
+
+            var enumerator = System.Globalization.StringInfo.GetTextElementEnumerator(input);
+            while (enumerator.MoveNext())
+            {
+                string inputElement = enumerator.GetTextElement();
+                if (inputElement.ToCharArray().Last() == emojiSelector) {
+                    output += inputElement;
+                }
+                else
+                {
+                    output += inputElement + emojiSelector;
+                }
+            }
+
+            return output;
+        }
 
         public static string ReplaceElement(string inGrid, int width, Point location, string newString)
         {

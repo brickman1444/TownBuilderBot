@@ -88,6 +88,7 @@ namespace TownBuilderBot
             new(Emoji.PlaceOther.Fountain, "Fountain", Zone.Commercial, Flags.Water),
             new(Emoji.PlaceOther.RollerCoaster, "Roller Coaster", Zone.Tourism, Flags.Flammable),
             new(Emoji.PlaceOther.Tent, "Tent", Zone.Residential, Flags.Flammable),
+            new(Emoji.OtherObjects.Moai, "Moai", Zone.Tourism, Flags.Flammable),
 
             new(Emoji.Sport.FlagInHole, "Golf Course", Zone.Commercial, Flags.Flammable),
 

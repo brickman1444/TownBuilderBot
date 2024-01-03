@@ -15,6 +15,45 @@ namespace TownBuilderBot
             output = outputHelper;
         }
 
+        private void StringEqual(string expected, string actual)
+        {
+            if (!string.Equals(expected, actual))
+            {
+                System.Globalization.StringInfo expectedInfo = new System.Globalization.StringInfo(expected);
+                System.Globalization.StringInfo actualInfo = new System.Globalization.StringInfo(actual);
+
+                output.WriteLine("  Index Expected  Actual");
+                output.WriteLine("-------------------------");
+                int maxLen = Math.Max(actualInfo.LengthInTextElements, expectedInfo.LengthInTextElements);
+                int minLen = Math.Min(actualInfo.LengthInTextElements, expectedInfo.LengthInTextElements);
+                for (int i = 0; i < maxLen; i++)
+                {
+                    output.WriteLine("{0} {1,-3} {2,-4} {3,-3}  {4,-4} {5,-3}",
+                        i < minLen && expectedInfo.SubstringByTextElements(i, 1) == actualInfo.SubstringByTextElements(i, 1) ? " " : "*", // put a mark beside a differing row
+                        i, // the index
+                        i < expectedInfo.LengthInTextElements ? PrintableCharacterArray(expectedInfo.SubstringByTextElements(i, 1)) : "", // character decimal value
+                        i < expectedInfo.LengthInTextElements ? ToLiteral(expectedInfo.SubstringByTextElements(i, 1)) : "", // character safe string
+                        i < actualInfo.LengthInTextElements ? PrintableCharacterArray(actualInfo.SubstringByTextElements(i, 1)) : "", // character decimal value
+                        i < actualInfo.LengthInTextElements ? ToLiteral(actualInfo.SubstringByTextElements(i, 1)) : "" // character safe string
+                    );
+                }
+            }
+
+            Assert.Equal(expected, actual);
+        }
+
+        private static string ToLiteral(string value)
+        {
+            return Regex.Escape(value);
+        }
+
+        private static string PrintableCharacterArray(string value)
+        {
+            char[] chars = value.ToCharArray();
+            IEnumerable<string> strings = value.ToCharArray().Select(c => string.Format("{0:X}", (int)c));
+            return string.Join(", ", strings);
+        }
+
         [Fact]
         public static void ReplaceElement_OnlyChangesTargetElement()
         {
@@ -492,43 +531,23 @@ namespace TownBuilderBot
             StringEqual(expected, actual);
         }
 
-        private void StringEqual(string expected, string actual)
+        [Fact]
+        public void SatelliteDishes_SpawnAlien()
         {
-            if (!string.Equals(expected, actual))
-            {
-                System.Globalization.StringInfo expectedInfo = new System.Globalization.StringInfo(expected);
-                System.Globalization.StringInfo actualInfo = new System.Globalization.StringInfo(actual);
+            System.Random rand = new System.Random();
+            string initial = "🏜️🏜️🏜️🏜️\n"
+                           + "🏜️🏜️🏜️📡️\n"
+                           + "📡️📡️📡️🏜️\n"
+                           + "🏜️🏜️🏜️🏜️";
+            int width = 4;
+            string actual = Program.TickGridElements(initial, width, rand);
 
-                output.WriteLine("  Index Expected  Actual");
-                output.WriteLine("-------------------------");
-                int maxLen = Math.Max(actualInfo.LengthInTextElements, expectedInfo.LengthInTextElements);
-                int minLen = Math.Min(actualInfo.LengthInTextElements, expectedInfo.LengthInTextElements);
-                for (int i = 0; i < maxLen; i++)
-                {
-                    output.WriteLine("{0} {1,-3} {2,-4} {3,-3}  {4,-4} {5,-3}",
-                        i < minLen && expectedInfo.SubstringByTextElements(i, 1) == actualInfo.SubstringByTextElements(i, 1) ? " " : "*", // put a mark beside a differing row
-                        i, // the index
-                        i < expectedInfo.LengthInTextElements ? PrintableCharacterArray(expectedInfo.SubstringByTextElements(i, 1)) : "", // character decimal value
-                        i < expectedInfo.LengthInTextElements ? ToLiteral(expectedInfo.SubstringByTextElements(i, 1)) : "", // character safe string
-                        i < actualInfo.LengthInTextElements ? PrintableCharacterArray(actualInfo.SubstringByTextElements(i, 1)) : "", // character decimal value
-                        i < actualInfo.LengthInTextElements ? ToLiteral(actualInfo.SubstringByTextElements(i, 1)) : "" // character safe string
-                    );
-                }
-            }
+            string expected = "🏜️🏜️🏜️🏜️\n"
+                            + "🏜️🏜️🏜️📡️\n"
+                            + "📡️🛸️📡️🏜️\n"
+                            + "🏜️🏜️🏜️🏜️";
 
-            Assert.Equal(expected, actual);
-        }
-
-        private static string ToLiteral(string value)
-        {
-            return Regex.Escape(value);
-        }
-
-        private static string PrintableCharacterArray(string value)
-        {
-            char[] chars = value.ToCharArray();
-            IEnumerable<string> strings = value.ToCharArray().Select(c => string.Format("{0:X}", (int)c));
-            return string.Join(", ", strings);
+            StringEqual(expected, actual);
         }
     }
 }

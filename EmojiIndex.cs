@@ -25,6 +25,7 @@ namespace TownBuilderBot
             Flammable = 1,
             SpawnDragon = 2,
             Water = 4,
+            SpawnFlyingSaucer = 8,
         }
 
         public class EmojiData
@@ -72,7 +73,7 @@ namespace TownBuilderBot
             new(Emoji.PlaceBuilding.School, "School", Zone.Residential, Flags.Flammable),
             new(Emoji.PlaceBuilding.Stadium, "Stadium", Zone.Tourism, Flags.Flammable),
             new(Emoji.PlaceBuilding.StatueOfLiberty, "Statue of Liberty", Zone.Tourism, Flags.Flammable),
-            new(Emoji.PlaceBuilding.TokyoTower, "Tokyo Tower", Zone.Tourism, Flags.Flammable),
+            new(Emoji.PlaceBuilding.TokyoTower, "Tokyo Tower", Zone.Tourism, Flags.Flammable|Flags.SpawnFlyingSaucer, TickFlyingSaucerSpawner),
 
             new(Emoji.PlaceGeographic.BeachWithUmbrella, "Beach With Umbrella", Zone.Natural, Flags.Water),
             new(Emoji.PlaceGeographic.Camping, "Campsite", Zone.Natural, Flags.Flammable),
@@ -96,7 +97,7 @@ namespace TownBuilderBot
 
             new(Emoji.Emotion.Hole, "Hole", Zone.Commercial, Flags.None),
 
-            new(Emoji.Science.SatelliteAntenna, "Satellite Antenna", Zone.Commercial, Flags.Flammable),
+            new(Emoji.Science.SatelliteAntenna, "Satellite Antenna", Zone.Commercial, Flags.Flammable|Flags.SpawnFlyingSaucer, TickFlyingSaucerSpawner),
 
             new(Emoji.PlantOther.DeciduousTree, "Deciduous Tree", Zone.Natural, Flags.Flammable),
             new(Emoji.PlantOther.EvergreenTree, "Evergreen Tree", Zone.Natural, Flags.Flammable),
@@ -105,6 +106,8 @@ namespace TownBuilderBot
             new(Emoji.SkyAndWeather.Fog, "Fog", Zone.None, Flags.SpawnDragon, MakeReplaceTickFunction(Emoji.PlaceGeographic.Desert)),
             new(Emoji.SkyAndWeather.Fire, "Fire", Zone.None, Flags.SpawnDragon, MakeReplaceTickFunction(Emoji.SkyAndWeather.Fog)),
             new(Emoji.PlaceGeographic.Volcano, "Volcano", Zone.Natural, Flags.SpawnDragon, TickVolcano),
+
+            new(Emoji.TransportAir.FlyingSaucer, "Flying Saucer", Zone.None, Flags.None),
 
             new(Emoji.AnimalBird.Eagle, "Eagle", Zone.None, Flags.Flammable),
             new(Emoji.AnimalBird.Bird, "Bird", Zone.None, Flags.Flammable, MakeReplaceTickFunction(Emoji.AnimalBird.Eagle)),
@@ -206,6 +209,29 @@ namespace TownBuilderBot
             }
 
             return Program.ReplaceElement(oldGrid, width, location, Emoji.AnimalMammal.Rat);
+        }
+
+        private static string TickFlyingSaucerSpawner(string oldGrid, int width, Program.Point location, System.Random rand) {
+            Program.Point[] neighborLocations = new Program.Point[] {
+                new() { X = location.X + 1, Y = location.Y + 1 },
+                new() { X = location.X + 1, Y = location.Y },
+                new() { X = location.X + 1, Y = location.Y - 1 },
+                new() { X = location.X, Y = location.Y + 1 },
+                new() { X = location.X, Y = location.Y - 1 },
+                new() { X = location.X - 1, Y = location.Y + 1 },
+                new() { X = location.X - 1, Y = location.Y },
+                new() { X = location.X - 1, Y = location.Y - 1 },
+            };
+
+            IEnumerable<string> neighborElements = neighborLocations.Select(l => Program.GetElement(oldGrid, width, l)).Where(e => e != null);
+            IEnumerable<EmojiData> neighbors = neighborElements.Select(e => GetData(e)).Where(d => d != null);
+            IEnumerable<EmojiData> flyingSaucerSpawners = neighbors.Where(d => d.CheckFlag(Flags.SpawnFlyingSaucer));
+            if (flyingSaucerSpawners.Count() >= 2)
+            {
+                return Program.ReplaceElement(oldGrid, width, location, Emoji.TransportAir.FlyingSaucer);
+            }
+
+            return oldGrid;
         }
 
         public static TickFunctionType MakeReplaceTickFunction(Emoji.UnicodeString newString) {

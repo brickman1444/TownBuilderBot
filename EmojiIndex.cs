@@ -189,12 +189,12 @@ namespace TownBuilderBot
             int halfNeighbors = neighbors.Count() / 2;
 
             int numDragonNeighbors = neighbors.Where(d => d.CheckFlag(Flags.SpawnDragon)).Count();
-            if (numDragonNeighbors > halfNeighbors) {
+            if (numDragonNeighbors >= halfNeighbors) {
                 return Program.ReplaceElement(oldGrid, width, location, Emoji.AnimalReptile.Lizard);
             }
 
             int numWaterNeighbors = neighbors.Where(d => d.CheckFlag(Flags.Water)).Count();
-            if (numWaterNeighbors > halfNeighbors) {
+            if (numWaterNeighbors >= halfNeighbors) {
                 return Program.ReplaceElement(oldGrid, width, location, Emoji.AnimalMarine.Fish);
             }
 

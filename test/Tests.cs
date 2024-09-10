@@ -304,15 +304,15 @@ namespace TownBuilderBot
         [Fact]
         public static void TickVolcano_WorksInBottomRightCorner() {
             System.Random rand = new System.Random();
-            string grid = "🌳️🌳️🌳️\n"
+            string grid = Program.NormalizeEmojiRepresentation("🌳️🌳️🌳️\n"
                         + "🌳️🌳️🌳️\n"
-                        + "🌳️🌳️🌋";
+                        + "🌳️🌳️🌋");
             int width = 3;
             Program.Point volcanoLocation = new Program.Point{ X = 2, Y = 2};
 
-            string expectedResult = "🌳️🌳️🌳️\n"
+            string expectedResult = Program.NormalizeEmojiRepresentation("🌳️🌳️🌳️\n"
                                   + "🌳️🌳️🔥️\n"
-                                  + "🌳️🔥️🌋";
+                                  + "🌳️🔥️🌋");
 
             for (int i = 0; i < 1000; i++) {
                 grid = EmojiIndex.TickVolcano(grid, width, volcanoLocation, rand);

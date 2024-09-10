@@ -136,40 +136,54 @@ namespace TownBuilderBot
             return datas.Select(d => d.Emoji + " " + d.Name);
         }
 
+        private class VolcanoData {
+            public Program.Point location;
+            public string display;
+            public EmojiData emojiData;
+        };
+
+        private static VolcanoData GetVolcanoData(string grid, int width, Program.Point location) {
+            string display = Program.GetElement(grid, width, location);
+            if (display == null) {
+                return null;
+            }
+
+            EmojiData emojiData = GetData(display);
+            if (emojiData == null) {
+                return null;
+            }
+
+            return new VolcanoData(){ location = location, display = display, emojiData = emojiData };
+        }
+
         public static string TickVolcano(string oldGrid, int width, Program.Point location, System.Random rand) {
-            int choice = rand.Next(4);
-            Program.Point fireLocation = new() { X = location.X, Y = location.Y};
-            switch (choice) {
-                case 0:
-                    fireLocation.X += -1;
-                    fireLocation.Y += 0;
-                    break;
-                case 1:
-                    fireLocation.X += 0;
-                    fireLocation.Y += -1;
-                    break;
-                case 2:
-                    fireLocation.X += 0;
-                    fireLocation.Y += 1;
-                    break;
-                default:
-                    fireLocation.X += 1;
-                    fireLocation.Y += 0;
-                    break;
-            }
 
-            string targetElement = Program.GetElement(oldGrid, width, fireLocation);
-            if (targetElement == null) {
+            Program.Point[] neighborLocations = new Program.Point[] {
+                new() { X = location.X, Y = location.Y + 1 },
+                new() { X = location.X + 1, Y = location.Y },
+                new() { X = location.X, Y = location.Y - 1 },
+                new() { X = location.X - 1, Y = location.Y },
+            };
+
+            IEnumerable<VolcanoData> neighbors = neighborLocations.Select(l => GetVolcanoData(oldGrid, width, l)).Where(d => d != null);
+            IEnumerable<VolcanoData> flammableNeighbors = neighbors.Where(d => d.emojiData.CheckFlag(Flags.Flammable));
+            VolcanoData neighborToLight = flammableNeighbors.FirstOrDefault();
+
+            /*
+            waterwave
+            desertisland
+            BeachWithUmbrella
+            desert
+            mountain
+            SnowCappedMountain
+            fuji
+            */
+
+            if (neighborToLight == null) {
                 return oldGrid;
             }
 
-            EmojiData targetData = GetData(targetElement);
-            if (!targetData.CheckFlag(Flags.Flammable))
-            {
-                return oldGrid;
-            }
-
-            return Program.ReplaceElement(oldGrid, width, fireLocation, Emoji.SkyAndWeather.Fire);
+            return Program.ReplaceElement(oldGrid, width, neighborToLight.location, Emoji.SkyAndWeather.Fire);
         }
 
         private static string TickEgg(string oldGrid, int width, Program.Point location, System.Random rand) {

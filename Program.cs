@@ -139,7 +139,7 @@ namespace TownBuilderBot
                         string element = stringInfo.SubstringByTextElements(index, 1);
 
                         if (element == elementData.Emoji) {
-                            grid = elementData.TickFunction(grid, gridWidth, new Point(){X = x, Y = y}, rand);
+                            grid = elementData.TickFunction(grid, gridWidth, new Point(){X = x, Y = y});
                         }
                     }
                 }

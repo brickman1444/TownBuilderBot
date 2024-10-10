@@ -6,7 +6,7 @@ using Emoji = Centvrio.Emoji;
 
 namespace TownBuilderBot
 {
-    using TickFunctionType = Func<string, int, Program.Point, System.Random, string>;
+    using TickFunctionType = Func<string, int, Program.Point, string>;
     static class EmojiIndex
     {
         public enum Zone
@@ -156,7 +156,7 @@ namespace TownBuilderBot
             return new VolcanoData(){ location = location, display = display, emojiData = emojiData };
         }
 
-        public static string TickVolcano(string oldGrid, int width, Program.Point location, System.Random rand) {
+        public static string TickVolcano(string oldGrid, int width, Program.Point location) {
 
             Program.Point[] neighborLocations = new Program.Point[] {
                 new() { X = location.X, Y = location.Y + 1 },
@@ -186,7 +186,7 @@ namespace TownBuilderBot
             return Program.ReplaceElement(oldGrid, width, neighborToLight.location, Emoji.SkyAndWeather.Fire);
         }
 
-        private static string TickEgg(string oldGrid, int width, Program.Point location, System.Random rand) {
+        private static string TickEgg(string oldGrid, int width, Program.Point location) {
             Program.Point[] neighborLocations = new Program.Point[] {
                 new() { X = location.X + 1, Y = location.Y + 1 },
                 new() { X = location.X + 1, Y = location.Y },
@@ -225,7 +225,7 @@ namespace TownBuilderBot
             return Program.ReplaceElement(oldGrid, width, location, Emoji.AnimalMammal.Rat);
         }
 
-        private static string TickFlyingSaucerSpawner(string oldGrid, int width, Program.Point location, System.Random rand) {
+        private static string TickFlyingSaucerSpawner(string oldGrid, int width, Program.Point location) {
             Program.Point[] neighborLocations = new Program.Point[] {
                 new() { X = location.X + 1, Y = location.Y + 1 },
                 new() { X = location.X + 1, Y = location.Y },
@@ -249,7 +249,7 @@ namespace TownBuilderBot
         }
 
         public static TickFunctionType MakeReplaceTickFunction(Emoji.UnicodeString newString) {
-            return (string oldGrid, int width, Program.Point location, System.Random rand) => {
+            return (string oldGrid, int width, Program.Point location) => {
                 return Program.ReplaceElement(oldGrid, width, location, newString);
             };
         }

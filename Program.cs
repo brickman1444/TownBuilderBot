@@ -114,7 +114,7 @@ namespace TownBuilderBot
             Point oldQuestionMarkLocation = GetGridCoordinates(oldGrid, gridWidth, QuestionMark);
             string winningEmoji = GetPollWinningElement(poll, rand);
 
-            string tickedGrid = TickGridElements(oldGrid, gridWidth, rand);
+            string tickedGrid = TickGridElements(oldGrid, gridWidth);
 
             string newGridWithoutQuestionMark = ReplaceElement(tickedGrid, gridWidth, oldQuestionMarkLocation, winningEmoji);
 
@@ -125,7 +125,7 @@ namespace TownBuilderBot
             return ReplaceElement(newGridWithoutQuestionMark, gridWidth, newTargetLocation, QuestionMark);
         }
 
-        public static string TickGridElements(string grid, int gridWidth, Random rand) {
+        public static string TickGridElements(string grid, int gridWidth) {
             grid = NormalizeEmojiRepresentation(grid);
             foreach (EmojiIndex.EmojiData elementData in EmojiIndex.All) {
                 if (elementData.TickFunction == null) {

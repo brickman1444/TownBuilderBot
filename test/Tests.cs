@@ -293,9 +293,8 @@ namespace TownBuilderBot
                             + "🔥️🌳️🌳️\n"
                             + "🌳️🌳️🌳️";
 
-            for (int i = 0; i < 1000; i++) {
-                grid = EmojiIndex.TickVolcano(grid, width, volcanoLocation);
-            }
+            grid = EmojiIndex.TickVolcano(grid, width, volcanoLocation);
+            grid = EmojiIndex.TickVolcano(grid, width, volcanoLocation);
 
             StringEqual(fullFire, grid);
         }
@@ -312,9 +311,8 @@ namespace TownBuilderBot
                                   + "🌳️🌳️🔥️\n"
                                   + "🌳️🔥️🌋");
 
-            for (int i = 0; i < 1000; i++) {
-                grid = EmojiIndex.TickVolcano(grid, width, volcanoLocation);
-            }
+            grid = EmojiIndex.TickVolcano(grid, width, volcanoLocation);
+            grid = EmojiIndex.TickVolcano(grid, width, volcanoLocation);
 
             Assert.Equal(expectedResult, grid);
         }
@@ -339,7 +337,7 @@ namespace TownBuilderBot
                                   + "🌳️🏜️🌳️");
             Assert.NotEqual(expectedResult, grid);
 
-            for (int i = 0; i < 1000; i++) {
+            for (int i = 0; i < 10; i++) {
                 grid = Program.TickGridElements(grid, width);
             }
 

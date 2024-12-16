@@ -65,8 +65,6 @@ namespace TownBuilderBot
 
         private static Mastonet.Entities.Status GetLatestStatus(MastodonClient client)
         {
-            Mastonet.Entities.Account account = client.GetCurrentUser().Result;
-
             string accountId = Environment.GetEnvironmentVariable("mastodonAccountId");
             var statuses = client.GetAccountStatuses(accountId, new ArrayOptions(){ Limit = 1 }).Result;
 

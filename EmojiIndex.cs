@@ -170,6 +170,7 @@ namespace TownBuilderBot
             VolcanoData neighborToLight = flammableNeighbors.FirstOrDefault();
 
             /*
+            hole
             waterwave
             desertisland
             BeachWithUmbrella

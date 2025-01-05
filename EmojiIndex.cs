@@ -177,6 +177,12 @@ namespace TownBuilderBot
                 return Program.ReplaceElement(oldGrid, width, waterToIsland.location, Emoji.PlaceGeographic.DesertIsland);
             }
 
+            IEnumerable<VolcanoData> islandNeighbors = neighbors.Where(d => d.emojiData.Emoji == Program.NormalizeEmojiRepresentation("🏝️"));
+            VolcanoData islandToBeach = islandNeighbors.FirstOrDefault();
+            if (islandToBeach != null) {
+                return Program.ReplaceElement(oldGrid, width, islandToBeach.location, Emoji.PlaceGeographic.BeachWithUmbrella);
+            }
+
             IEnumerable<VolcanoData> flammableNeighbors = neighbors.Where(d => d.emojiData.CheckFlag(Flags.Flammable));
             VolcanoData neighborToLight = flammableNeighbors.FirstOrDefault();
 

@@ -489,6 +489,22 @@ namespace TownBuilderBot
         }
 
         [Fact]
+        public static void TickGrid_VolcanoTurnsIslandToDesert() {
+            string originalGrid = Program.NormalizeEmojiRepresentation(
+                                "🌊️🏝️🌊️\n"
+                                + "🏝️🌋🏝️\n"
+                                + "🌊️🏝️🌊️");
+            int width = 3;
+            string tickedGrid = Program.TickGridElements(originalGrid, width);
+
+            string expected = Program.NormalizeEmojiRepresentation(
+                            "🌊️🏝️🌊️\n"
+                            + "🏝️🌋🏝️\n"
+                            + "🌊️🏖️🌊️");
+            Assert.Equal(expected, tickedGrid);
+        }
+
+        [Fact]
         public static void GetZoneGrid_Works() {
             string elementsGrid = "🌳️🏠️\n"
                                 + "🎢️🏬️";

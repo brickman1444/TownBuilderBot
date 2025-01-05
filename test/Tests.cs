@@ -416,30 +416,31 @@ namespace TownBuilderBot
         }
 
         [Fact]
-        public static void TickGrid_UpdatesVolcano() {
+        public void TickGrid_UpdatesVolcano() {
             string grid = "🌳️🌳️🌳️\n"
                         + "🌳️🌋🌳️\n"
                         + "🌳️🌳️🌳️";
             int width = 3;
             grid = Program.TickGridElements(grid, width);
-            Assert.Contains("🔥️", grid);
+            string expected = Program.NormalizeEmojiRepresentation(
+                "🌳️🌳️🌳️\n"
+                + "🌳️🌋🌳️\n"
+                + "🌳️🔥️🌳️");
+            StringEqual(expected, grid);
 
             grid = Program.TickGridElements(grid, width);
-            Assert.Contains("🌫️", grid);
+            expected = Program.NormalizeEmojiRepresentation(
+                "🌳️🌳️🌳️\n"
+                + "🌳️🌋🔥️\n"
+                + "🌳️🌫️🌳️");
+            StringEqual(expected, grid);
 
             grid = Program.TickGridElements(grid, width);
-            Assert.Contains("🏜️", grid);
-
-            string expectedResult = Program.NormalizeEmojiRepresentation("🌳️🏜️🌳️\n"
-                                  + "🏜️🌋🏜️\n"
-                                  + "🌳️🏜️🌳️");
-            Assert.NotEqual(expectedResult, grid);
-
-            for (int i = 0; i < 10; i++) {
-                grid = Program.TickGridElements(grid, width);
-            }
-
-            Assert.Equal(expectedResult, grid);
+            expected = Program.NormalizeEmojiRepresentation(
+                "🌳️🔥️🌳️\n"
+                + "🌳️🌋🌫️\n"
+                + "🌳️🏜️🌳️");
+            StringEqual(expected, grid);
         }
 
         [Fact]
@@ -489,7 +490,7 @@ namespace TownBuilderBot
         }
 
         [Fact]
-        public static void TickGrid_VolcanoTurnsIslandToDesert() {
+        public static void TickGrid_VolcanoTurnsIslandToBeach() {
             string originalGrid = Program.NormalizeEmojiRepresentation(
                                 "🌊️🏝️🌊️\n"
                                 + "🏝️🌋🏝️\n"
@@ -501,6 +502,38 @@ namespace TownBuilderBot
                             "🌊️🏝️🌊️\n"
                             + "🏝️🌋🏝️\n"
                             + "🌊️🏖️🌊️");
+            Assert.Equal(expected, tickedGrid);
+        }
+
+        [Fact]
+        public static void TickGrid_VolcanoTurnsBeachToDesert() {
+            string originalGrid = Program.NormalizeEmojiRepresentation(
+                                "🌊️🏖️🌊️\n"
+                                + "🏖️🌋🏖️\n"
+                                + "🌊️🏖️🌊️");
+            int width = 3;
+            string tickedGrid = Program.TickGridElements(originalGrid, width);
+
+            string expected = Program.NormalizeEmojiRepresentation(
+                            "🌊️🏖️🌊️\n"
+                            + "🏖️🌋🏖️\n"
+                            + "🌊️🏜️🌊️");
+            Assert.Equal(expected, tickedGrid);
+        }
+
+        [Fact]
+        public static void TickGrid_VolcanoTurnsDesertToMountain() {
+            string originalGrid = Program.NormalizeEmojiRepresentation(
+                                "🌊️🏜️🌊️\n"
+                                + "🏜️🌋🏜️\n"
+                                + "🌊️🏜️🌊️");
+            int width = 3;
+            string tickedGrid = Program.TickGridElements(originalGrid, width);
+
+            string expected = Program.NormalizeEmojiRepresentation(
+                            "🌊️🏜️🌊️\n"
+                            + "🏜️🌋🏜️\n"
+                            + "🌊️⛰️🌊️");
             Assert.Equal(expected, tickedGrid);
         }
 

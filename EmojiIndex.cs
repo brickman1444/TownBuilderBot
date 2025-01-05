@@ -183,8 +183,23 @@ namespace TownBuilderBot
                 return Program.ReplaceElement(oldGrid, width, islandToBeach.location, Emoji.PlaceGeographic.BeachWithUmbrella);
             }
 
+            IEnumerable<VolcanoData> beachNeighbors = neighbors.Where(d => d.emojiData.Emoji == Program.NormalizeEmojiRepresentation("🏖️"));
+            VolcanoData beachToDesert = beachNeighbors.FirstOrDefault();
+            if (beachToDesert != null) {
+                return Program.ReplaceElement(oldGrid, width, beachToDesert.location, Emoji.PlaceGeographic.Desert);
+            }
+
             IEnumerable<VolcanoData> flammableNeighbors = neighbors.Where(d => d.emojiData.CheckFlag(Flags.Flammable));
             VolcanoData neighborToLight = flammableNeighbors.FirstOrDefault();
+            if (neighborToLight != null) {
+                return Program.ReplaceElement(oldGrid, width, neighborToLight.location, Emoji.SkyAndWeather.Fire);
+            }
+
+            IEnumerable<VolcanoData> desertNeighbors = neighbors.Where(d => d.emojiData.Emoji == Program.NormalizeEmojiRepresentation("🏜️"));
+            VolcanoData desertToMountain = desertNeighbors.FirstOrDefault();
+            if (desertToMountain != null) {
+                return Program.ReplaceElement(oldGrid, width, desertToMountain.location, Emoji.PlaceGeographic.Mountain);
+            }
 
             /*
             waterwave
@@ -196,11 +211,7 @@ namespace TownBuilderBot
             fuji
             */
 
-            if (neighborToLight == null) {
-                return oldGrid;
-            }
-
-            return Program.ReplaceElement(oldGrid, width, neighborToLight.location, Emoji.SkyAndWeather.Fire);
+            return oldGrid;
         }
 
         private static string TickEgg(string oldGrid, int width, Program.Point location) {

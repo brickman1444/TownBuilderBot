@@ -158,19 +158,29 @@ namespace TownBuilderBot
 
         public static string TickVolcano(string oldGrid, int width, Program.Point location) {
 
-            Program.Point[] neighborLocations = new Program.Point[] {
+            Program.Point[] neighborLocations = [
                 new() { X = location.X, Y = location.Y + 1 },
                 new() { X = location.X + 1, Y = location.Y },
                 new() { X = location.X, Y = location.Y - 1 },
                 new() { X = location.X - 1, Y = location.Y },
-            };
+            ];
 
             IEnumerable<VolcanoData> neighbors = neighborLocations.Select(l => GetVolcanoData(oldGrid, width, l)).Where(d => d != null);
+
+            if (neighbors.Any(d => d.display == "🕳️")) {
+                return oldGrid;
+            }
+
+            IEnumerable<VolcanoData> waterNeigbors = neighbors.Where(d => d.emojiData.Emoji == Program.NormalizeEmojiRepresentation("🌊"));
+            VolcanoData waterToIsland = waterNeigbors.FirstOrDefault();
+            if (waterToIsland != null) {
+                return Program.ReplaceElement(oldGrid, width, waterToIsland.location, Emoji.PlaceGeographic.DesertIsland);
+            }
+
             IEnumerable<VolcanoData> flammableNeighbors = neighbors.Where(d => d.emojiData.CheckFlag(Flags.Flammable));
             VolcanoData neighborToLight = flammableNeighbors.FirstOrDefault();
 
             /*
-            hole
             waterwave
             desertisland
             BeachWithUmbrella

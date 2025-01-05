@@ -444,9 +444,10 @@ namespace TownBuilderBot
 
         [Fact]
         public static void TickGrid_VolcanoDoesntLightNonFlammableElementsOnFire() {
-            string originalGrid = Program.NormalizeEmojiRepresentation("🌊🌊🌊\n"
-                                + "🌊🌋🌊\n"
-                                + "🌊🌊🌊");
+            string originalGrid = Program.NormalizeEmojiRepresentation(
+                                  "🐉🐉🐉\n"
+                                + "🐉🌋🐉\n"
+                                + "🐉🐉🐉");
             int width = 3;
             string tickedGrid = Program.TickGridElements(originalGrid, width);
 
@@ -457,6 +458,34 @@ namespace TownBuilderBot
             }
 
             Assert.Equal(originalGrid, tickedGrid);
+        }
+
+        [Fact]
+        public static void TickGrid_VolcanoDoesntLightTreesWhenAdjacentToHole() {
+            string originalGrid = Program.NormalizeEmojiRepresentation(
+                                "🌳️🌳️🌳️\n"
+                                + "🌳️🌋🕳️\n"
+                                + "🌳️🌳️🌳️");
+            int width = 3;
+            string tickedGrid = Program.TickGridElements(originalGrid, width);
+
+            Assert.Equal(originalGrid, tickedGrid);
+        }
+
+        [Fact]
+        public static void TickGrid_VolcanoTurnsWaterToIsland() {
+            string originalGrid = Program.NormalizeEmojiRepresentation(
+                                "🌊️🌊️🌊️\n"
+                                + "🌊️🌋🌊️\n"
+                                + "🌊️🌊️🌊️");
+            int width = 3;
+            string tickedGrid = Program.TickGridElements(originalGrid, width);
+
+            string expected = Program.NormalizeEmojiRepresentation(
+                            "🌊️🌊️🌊️\n"
+                            + "🌊️🌋🌊️\n"
+                            + "🌊️🏝️🌊️");
+            Assert.Equal(expected, tickedGrid);
         }
 
         [Fact]

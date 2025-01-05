@@ -47,7 +47,9 @@ namespace TownBuilderBot
 
             MastodonClient client = MakeClient();
 
-            Post post = MakeNormalPost(client, 10);
+            Mastonet.Entities.Status latestStatus = GetLatestStatus(client);
+            Random rand = new Random();
+            Post post = MakeNormalPost(latestStatus, 10, rand);
 
             if (isReadOnly) {
                 PrintPost(post);
@@ -92,19 +94,27 @@ namespace TownBuilderBot
             }
         }
 
-        private static Post MakeNormalPost(MastodonClient client, int gridWidth)
+        public static Post MakeNormalPost(Mastonet.Entities.Status latestStatus, int gridWidth, Random rand)
         {
-            Mastonet.Entities.Status latestStatus = GetLatestStatus(client);
-
             string latestStatusAsCharacters = ReplaceHTMLWithCharacters(latestStatus.Content);
+            string latestStatusWithoutHashtags = RemoveHashTags(latestStatusAsCharacters);
 
-            Random rand = new Random();
-
-            string newGrid = UpdateGrid(latestStatusAsCharacters, latestStatus.Poll, gridWidth, rand);
+            string newGrid = UpdateGrid(latestStatusWithoutHashtags, latestStatus.Poll, gridWidth, rand);
+            string newGridWithHashtags = newGrid + "\n#hachybots #bot";
 
             IEnumerable<string> pollOptions = EmojiIndex.GetRandomPollOptions(rand);
 
-            return new Post(){ body = newGrid, pollOptions = pollOptions };
+            return new Post(){ body = newGridWithHashtags, pollOptions = pollOptions };
+        }
+
+        public static string RemoveHashTags(string postBody) {
+            if (!postBody.Contains('#')) {
+                return postBody;
+            }
+
+            string[] tokens = postBody.Split('\n');
+            IEnumerable<string> allButLastRow = tokens.Take(tokens.Length - 1);
+            return String.Join('\n', allButLastRow);
         }
 
         private static string UpdateGrid(string oldGrid, Mastonet.Entities.Poll poll, int gridWidth, Random rand)

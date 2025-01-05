@@ -196,6 +196,104 @@ namespace TownBuilderBot
         }
 
         [Fact]
+        public static void MakeNormalPost_HandlesPostWithoutHashTags()
+        {
+            Mastonet.Entities.Status status = new Mastonet.Entities.Status() {
+                Content = "❓🏔🏔🏔\n"
+                        + "🏔🏔🏔🏔\n"
+                        + "🏔🏔🏔🏔\n"
+                        + "🏔🏔🏔🏔",
+                Poll = new Mastonet.Entities.Poll() {
+                    Options = [
+                        new Mastonet.Entities.PollOption() {
+                            Title = "A",
+                            VotesCount = 10,
+                        },
+                        new Mastonet.Entities.PollOption() {
+                            Title = "B",
+                            VotesCount = 1,
+                        },
+                    ]
+                }
+            };
+
+            Random rand = new Random(0);
+            Program.Post post = Program.MakeNormalPost(status, 4, rand);
+
+            string expected = "A🏔️🏔️🏔️\n"
+                        + "🏔️🏔️🏔️❓\n"
+                        + "🏔️🏔️🏔️🏔️\n"
+                        + "🏔️🏔️🏔️🏔️\n"
+                        + "#hachybots #bot";
+
+            Assert.Equal(expected, post.body);
+        }
+
+        [Fact]
+        public void MakeNormalPost_HandlesPostWithHashTags()
+        {
+            Mastonet.Entities.Status status = new Mastonet.Entities.Status() {
+                Content = "❓🏔🏔🏔\n"
+                        + "🏔🏔🏔🏔\n"
+                        + "🏔🏔🏔🏔\n"
+                        + "🏔🏔🏔🏔\n"
+                        + "#hachybots #bot",
+                Poll = new Mastonet.Entities.Poll() {
+                    Options = [
+                        new Mastonet.Entities.PollOption() {
+                            Title = "A",
+                            VotesCount = 10,
+                        },
+                        new Mastonet.Entities.PollOption() {
+                            Title = "B",
+                            VotesCount = 1,
+                        },
+                    ]
+                }
+            };
+
+            Random rand = new Random(0);
+            Program.Post post = Program.MakeNormalPost(status, 4, rand);
+
+            string expected = "A🏔️🏔️🏔️\n"
+                        + "🏔️🏔️🏔️❓\n"
+                        + "🏔️🏔️🏔️🏔️\n"
+                        + "🏔️🏔️🏔️🏔️\n"
+                        + "#hachybots #bot";
+
+            StringEqual(expected, post.body);
+        }
+
+        [Fact]
+        public void RemoveHashTags_HandlesPostWithHashtags()
+        {
+            string input = "❓🏔️🏔️🏔️\n"
+                        + "🏔️🏔️🏔️🏔️\n"
+                        + "🏔️🏔️🏔️🏔️\n"
+                        + "🏔️🏔️🏔️🏔️\n"
+                        + "#hashtag";
+            string expected = "❓🏔️🏔️🏔️\n"
+                        + "🏔️🏔️🏔️🏔️\n"
+                        + "🏔️🏔️🏔️🏔️\n"
+                        + "🏔️🏔️🏔️🏔️";
+            Assert.Equal(expected, Program.RemoveHashTags(input));
+        }
+
+        [Fact]
+        public void RemoveHashTags_HandlesPostWithoutHashtags()
+        {
+            string input = "❓🏔️🏔️🏔️\n"
+                        + "🏔️🏔️🏔️🏔️\n"
+                        + "🏔️🏔️🏔️🏔️\n"
+                        + "🏔️🏔️🏔️🏔️";
+            string expected = "❓🏔️🏔️🏔️\n"
+                        + "🏔️🏔️🏔️🏔️\n"
+                        + "🏔️🏔️🏔️🏔️\n"
+                        + "🏔️🏔️🏔️🏔️";
+            Assert.Equal(expected, Program.RemoveHashTags(input));
+        }
+
+        [Fact]
         public static void GetGridCoordinates_FindsStartCoordinate()
         {
             string targetElement = "X";

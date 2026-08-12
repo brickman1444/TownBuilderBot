@@ -12,7 +12,7 @@ jobs:
     - name: Setup .NET Core
       uses: actions/setup-dotnet@v1
       with:
-        dotnet-version: 8.0.x
+        dotnet-version: 10.0.x
 
     - name: Build with dotnet
       run: dotnet build --configuration Release
@@ -24,7 +24,7 @@ jobs:
       run: dotnet tool install -g Amazon.Lambda.Tools
 
     - name: Build Lambda package
-      run: dotnet lambda package --configuration Release --framework net8.0 --output-package bin/Release/netcoreapp/package.zip
+      run: dotnet lambda package --configuration Release --framework net10.0 --output-package bin/Release/netcoreapp/package.zip
 
     - name: Update Lambda
       uses: kazimanzurrashid/aws-lambda-update-action@v1
